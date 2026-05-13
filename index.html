@@ -2519,6 +2519,22 @@ document.getElementById('chatField').addEventListener('keypress', e => {
   if (e.key === 'Enter') sendMsg();
 });
 </script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
+  const firebaseConfig = {
+    apiKey:  "AIzaSyAwvZTzSOV7Z4_A-ZFnURiDkRFMKpObTEo",
+    authDomain:  "kultur2-e6dbc.firebaseapp.com",
+databaseURL: "https://kultur2-e6dbc-default-rtdb.europe-west1.firebasedatabase.app",
+projectId:  "kultur2-e6dbc",
+    storageBucket:  "kultur2-e6dbc.firebasestorage.app",
+ 
+
+    messagingSenderId:"801781384858",
+    appId:"1:801781384858:web:a76d6b4bf72d4c88f18123"
+  };
+
+  const app = initializeApp(firebaseConfig);
+</script>
 </body>
 </html>
