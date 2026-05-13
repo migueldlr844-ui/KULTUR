@@ -2535,6 +2535,37 @@ projectId:  "kultur2-e6dbc",
   };
 
   const app = initializeApp(firebaseConfig);
+  const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const registerBtn = document.getElementById("registerBtn");
+
+registerBtn.addEventListener("click", () => {
+
+  const email = document.getElementById("registerEmail").value;
+
+  const password = document.getElementById("registerPassword").value;
+
+  createUserWithEmailAndPassword(auth, email, password)
+
+    .then((userCredential) => {
+
+      alert("Compte créé avec succès !");
+
+      goPage("feed");
+
+    })
+
+    .catch((error) => {
+
+      alert(error.message);
+
+    });
+
+});
+
+</script>
 </script>
 </body>
 </html>
