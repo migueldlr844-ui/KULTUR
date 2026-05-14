@@ -1461,7 +1461,7 @@ hstat {}
           <button class="btn btn-primary btn-lg" onclick="goPage('auth')">
             Créer mon profil gratuit
           </button>
-          <button class="btn btn-ghost btn-lg" onclick="goPage('feed')">
+	          <button class="btn btn-ghost btn-lg".>
             Explorer le fil →
           </button>
         </div>
@@ -2463,7 +2463,7 @@ function toggleLike(btn) {
   if (!match) return;
 
   let num = match[0];
-  let val = num.includes('K') ? parseFloat(num) * 1000 : parseInt(num.replace(',',''));
+  let val = num.includes('K') ? parseFloat(num) * 1000 : parseInt(num.replace(',', ''));
   val = isLiked ? val - 1 : val + 1;
 
   const display = val >= 1000 ? (val / 1000).toFixed(1) + 'K' : val;
@@ -2498,7 +2498,8 @@ function sendMsg() {
   if (!val) return;
 
   const now = new Date();
-  const time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+  const time = now.getHours().toString().padStart(2, '0') + ':' +
+               now.getMinutes().toString().padStart(2, '0');
 
   const row = document.createElement('div');
   row.className = 'msg-row own';
@@ -2509,6 +2510,7 @@ function sendMsg() {
       <div class="msg-time">${time}</div>
     </div>
   `;
+
   msgs.appendChild(row);
   field.value = '';
   msgs.scrollTop = msgs.scrollHeight;
@@ -2519,29 +2521,47 @@ document.getElementById('chatField').addEventListener('keypress', e => {
   if (e.key === 'Enter') sendMsg();
 });
 </script>
+
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-  const firebaseConfig = {
-    apiKey:  "AIzaSyAwvZTzSOV7Z4_A-ZFnURiDkRFMKpObTEo",
-    authDomain:  "kultur2-e6dbc.firebaseapp.com",
-databaseURL: "https://kultur2-e6dbc-default-rtdb.europe-west1.firebasedatabase.app",
-projectId:  "kultur2-e6dbc",
-    storageBucket:  "kultur2-e6dbc.firebasestorage.app",
- 
+import {
 
-    messagingSenderId:"801781384858",
-    appId:"1:801781384858:web:a76d6b4bf72d4c88f18123"
-  };
+  getAuth,
 
-  const app = initializeApp(firebaseConfig);
-  const app = initializeApp(firebaseConfig);
+  createUserWithEmailAndPassword,
+
+  signInWithEmailAndPassword,
+
+  onAuthStateChanged,
+
+  signOut
+
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyAwvZTzSOV7Z4_A-ZFnURiDkRFMKpObTEo",
+
+  authDomain: "kultur2-e6dbc.firebaseapp.com",
+
+  projectId: "kultur2-e6dbc",
+
+  storageBucket: "kultur2-e6dbc.firebasestorage.app",
+
+  messagingSenderId: "801781384858",
+
+  appId: "1:801781384858:web:a76d6b4bf72d4c88f18123"
+
+};
+
+const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
 
-const registerBtn = document.getElementById("registerBtn");
+/* ─ INSCRIPTION ─ */
 
-registerBtn.addEventListener("click", () => {
+document.getElementById("registerBtn").addEventListener("click", () => {
 
   const email = document.getElementById("registerEmail").value;
 
@@ -2565,7 +2585,65 @@ registerBtn.addEventListener("click", () => {
 
 });
 
+/* ─ CONNEXION ─ */
+
+document.getElementById("loginBtn").addEventListener("click", () => {
+
+  const email = document.getElementById("loginEmail").value;
+
+  const password = document.getElementById("loginPassword").value;
+
+  signInWithEmailAndPassword(auth, email, password)
+
+    .then((userCredential) => {
+
+      alert("Connexion réussie !");
+
+      goPage("feed");
+
+    })
+
+    .catch((error) => {
+
+      alert(error.message);
+
+    });
+
+});
+
+/* ─ UTILISATEUR CONNECTÉ (persistant) ─ */
+
+onAuthStateChanged(auth, (user) => {
+
+  if (user) {
+
+    console.log("Utilisateur connecté :", user.email);
+
+    // ici tu peux afficher son profil
+
+  } else {
+
+    console.log("Aucun utilisateur connecté");
+
+  }
+
+});
+
+/* ─ DECONNEXION (option utile) ─ */
+
+window.logout = function () {
+
+  signOut(auth).then(() => {
+
+    alert("Déconnecté");
+
+    goPage("auth");
+
+  });
+
+};
+
 </script>
-</script>
+
 </body>
 </html>
