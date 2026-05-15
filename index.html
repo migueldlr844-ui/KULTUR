@@ -730,7 +730,96 @@ select.form-input option { background: var(--k-ink2); }
         <input class="form-input" id="reg-ville" type="text" placeholder="Yaoundé, Cameroun">
       </div>
 
-      <button class="btn btn-primary btn-full" id="reg-submit-btn" onclick="handleRegister()">
+      <button class="btn btn-primary btn-full" id="reg-submit-btn" onclick=" async function handleRegister(e) {
+  e.preventDefault();
+  const btn = document.getElementById('reg-btn');
+  const originalText = btn.innerText;
+  btn.innerText = "Création du compte...";
+  btn.disabled = true;
+
+  // 1. Récupération de tous les champs du formulaire
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-pass').value;
+  const typeArtiste = document.getElementById('reg-type').value;
+  const ville = document.getElementById('reg-ville').value.trim();
+
+  if(!name || !email || !pass || !typeArtiste || !ville) {
+    alert("Veuillez remplir tous les champs.");
+    btn.innerText = originalText;
+    btn.disabled = false;
+    return;
+  }
+
+  try {
+    // 2. Importation dynamique d'Authentication ET de Firestore
+    const { getAuth, createUserWithEmailAndPassword, updateProfile } = await import("https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js");
+    const { getFirestore, doc, setDoc } = await import("https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js");
+    
+    const auth = getAuth();
+    const db = getFirestore(); // Initialisation de Firestore
+
+    // 3. Création de l'utilisateur dans Firebase Auth
+    const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+    const user = userCredential.user;
+
+    // 4. Mise à jour du nom d'affichage de base
+    await updateProfile(user, { displayName: name });
+
+    // 5. Enregistrement des données étendues dans la collection "users" de Firestore
+    await setDoc(doc(db, "users", user.uid), {
+      uid: user.uid,
+      nom: name,
+      email: email,
+      typeArtiste: typeArtiste,
+      ville: ville,
+      bio: "Artiste passionné, membre de la communauté KULTUR.", // Bio par défaut modifiable plus tard
+      photoURL: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80", // Avatar par défaut
+      createdAt: new Date()
+    });
+
+    alert("Bienvenue sur KULTUR ! Votre profil est prêt.");
+    goPage('feed');
+
+  } catch (error) {
+    console.error("Erreur d'inscription:", error);
+    let msg = "Une erreur est survenue lors de l'inscription.";
+    if (error.code === 'auth/email-already-in-use') msg = "Cet email est déjà utilisé.";
+    if (error.code === 'auth/weak-password') msg = "Le mot de passe doit contenir au moins 6 caractères.";
+    if (error.code === 'auth/invalid-email') msg = "Format d'email invalide.";
+    alert(msg);
+  } finally {
+    btn.innerText = originalText;
+    btn.disabled = false;
+  }
+}
+async function loadUserProfile(uid) {
+  try {
+    const { getFirestore, doc, getDoc } = await import("https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js");
+    const db = getFirestore();
+    
+    // Récupérer le document de l'utilisateur dans Firestore
+    const docRef = doc(db, "users", uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      
+      // Mettre à jour les éléments HTML de la page Profil
+      // (Assure-toi que ces IDs correspondent ou ajoute-les dans ton HTML)
+      const profileName = document.querySelector('#page-profile h2');
+      const profileMeta = document.querySelector('#page-profile p.text-muted');
+      const profileBio = document.querySelector('#page-profile p:not(.text-muted)');
+
+      if(profileName) profileName.textContent = data.nom;
+      if(profileMeta) profileMeta.textContent = `${data.typeArtiste} • ${data.ville}`;
+      if(profileBio && data.bio) profileBio.textContent = data.bio;
+    }
+  } catch (error) {
+    console.error("Erreur lors du chargement du profil:", error);
+  }
+}
+()">
         Rejoindre KULTUR →
       </button>
 
