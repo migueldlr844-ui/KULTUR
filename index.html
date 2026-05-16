@@ -1,1461 +1,1115 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KULTUR — Le Réseau des Créateurs</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet">
-<style>
-:root {
-  --k-orange:   #F4622A;
-  --k-rouge:    #C92B1A;
-  --k-vert:     #1DB96A;
-  --k-marron:   #7A4528;
-  --k-or:       #E8A830;
-  --k-creme:    #FAF4EC;
-  --k-creme2:   #F0E6D3;
-  --k-ink:      #0F0A06;
-  --k-ink2:     #1C1208;
-  --k-ink3:     #2A1C10;
-  --k-muted:    #8A7060;
-  --k-border:   rgba(244,98,42,.18);
-  --k-border2:  rgba(250,244,236,.08);
-  --r: 16px;
-  --r-sm: 10px;
-  --r-lg: 24px;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KULTUR — Le Réseau des Créatifs</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    /* VARIABLES & THEME KULTUR (Palette Africaine Moderne) */
+    :root {
+      --color-ink: #111111;       /* Noir profond pour le texte/fonds */
+      --color-cream: #FDFBF7;     /* Fond principal doux */
+      --color-ocre: #E29578;      /* Ton terre cuite chaleureux */
+      --color-orange: #FF6F3D;    /* Accent vibrant culture */
+      --color-charcoal: #1E1E1E;  /* Cartes, barres latérales sombres */
+      --color-gray-dark: #2A2A2A;
+      --color-gray-light: #EAE5DC;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-serif: 'DM Serif Display', serif;
+      --font-sans: 'DM Sans', sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 32px;
+      --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--k-ink);
-  color: var(--k-creme);
-  overflow-x: hidden;
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-track { background: var(--k-ink2); }
-::-webkit-scrollbar-thumb { background: var(--k-orange); border-radius: 2px; }
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--color-cream);
+      color: var(--color-ink);
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
 
-.t-display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px; }
-.t-serif { font-family: 'DM Serif Display', serif; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-.pill {
-  display: inline-flex; align-items: center; gap: .35rem;
-  padding: .28rem .75rem;
-  border-radius: 100px;
-  font-size: .72rem; font-weight: 600; letter-spacing: .5px;
-}
-.pill-orange { background: rgba(244,98,42,.14); border: 1px solid rgba(244,98,42,.35); color: var(--k-orange); }
-.pill-vert   { background: rgba(29,185,106,.14); border: 1px solid rgba(29,185,106,.35); color: var(--k-vert); }
-.pill-or     { background: rgba(232,168,48,.14); border: 1px solid rgba(232,168,48,.35); color: var(--k-or); }
+    button, input, select, textarea {
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+    }
 
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
-  border: none; border-radius: var(--r-sm);
-  font-family: 'DM Sans', sans-serif; font-weight: 700;
-  cursor: pointer; transition: all .25s cubic-bezier(.4,0,.2,1);
-}
-.btn-lg { padding: .85rem 2rem; font-size: .95rem; letter-spacing: .5px; }
-.btn-md { padding: .6rem 1.4rem; font-size: .85rem; }
-.btn-sm { padding: .38rem .9rem; font-size: .75rem; }
+    /* STRUCTURES GENERALES & PAGES (SPA) */
+    .page {
+      display: none;
+      min-height: 100vh;
+      width: 100%;
+    }
+    .page.active {
+      display: block;
+      animation: pageIn var(--transition-smooth);
+    }
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-.btn-primary {
-  background: var(--k-orange); color: #fff;
-  box-shadow: 0 4px 24px rgba(244,98,42,.35);
-}
-.btn-primary:hover { background: #ff7042; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(244,98,42,.5); }
-.btn-primary:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+    /* REUTILISABLE UTILS */
+    .btn-kultur {
+      background-color: var(--color-orange);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.8rem;
+      border-radius: var(--radius-lg);
+      font-family: var(--font-sans);
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition-fast);
+      box-shadow: 0 4px 14px rgba(255, 111, 61, 0.2);
+    }
+    .btn-kultur:hover {
+      background-color: #e55a2b;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 111, 61, 0.3);
+    }
+    .btn-kultur:disabled {
+      background-color: #ccc;
+      box-shadow: none;
+      cursor: not-allowed;
+      transform: none;
+    }
 
-.btn-ghost {
-  background: transparent; color: var(--k-creme);
-  border: 1.5px solid rgba(250,244,236,.2);
-}
-.btn-ghost:hover { border-color: var(--k-orange); color: var(--k-orange); }
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--color-ink);
+      border: 2px solid var(--color-ink);
+    }
+    .btn-secondary:hover {
+      background-color: var(--color-ink);
+      color: var(--color-cream);
+    }
 
-.card { background: var(--k-ink2); border: 1px solid var(--k-border); border-radius: var(--r); }
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 2px solid var(--color-gray-light);
+      background-color: white;
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: var(--transition-fast);
+    }
+    .form-control:focus {
+      border-color: var(--color-orange);
+    }
 
-.divider {
-  display: flex; align-items: center; gap: .75rem;
-  color: var(--k-muted); font-size: .75rem; letter-spacing: 1px; text-transform: uppercase;
-}
-.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--k-border2); }
+    /* --- 1. CONFIGURATION AUTH PAGES (LOGIN / REGISTER) --- */
+    .auth-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      min-height: 100vh;
+    }
+    @media (min-width: 992px) {
+      .auth-container { grid-template-columns: 1.1fr 0.9fr; }
+    }
+    .auth-banner {
+      background: linear-gradient(135deg, rgba(17,17,17,0.85), rgba(30,30,30,0.7)), 
+                  url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3rem;
+      position: relative;
+    }
+    @media (max-width: 991px) { .auth-banner { display: none; } }
+    
+    .auth-banner .logo-brand {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+      color: var(--color-orange);
+    }
+    .auth-banner .quote-box h1 {
+      font-family: var(--font-serif);
+      font-size: 3.5rem;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+    .auth-form-side {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background-color: var(--color-cream);
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 420px;
+    }
+    .auth-card h2 {
+      font-family: var(--font-serif);
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+    }
+    .auth-card p.subtitle {
+      color: #666;
+      margin-bottom: 2rem;
+    }
 
-.section-eyebrow { font-size: .7rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--k-orange); }
+    /* --- 2. ARCHITECTURE INTERNE (FEED, CHAT, PROFIL) --- */
+    .app-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      min-height: 100vh;
+    }
+    @media (min-width: 768px) {
+      .app-layout { grid-template-columns: 260px 1fr; }
+    }
+    @media (min-width: 1200px) {
+      .app-layout { grid-template-columns: 280px 1fr 340px; }
+    }
 
-.form-label {
-  display: block; font-size: .72rem; font-weight: 700;
-  letter-spacing: 1.5px; text-transform: uppercase; color: var(--k-muted); margin-bottom: .4rem;
-}
-.form-input {
-  width: 100%; background: rgba(250,244,236,.04);
-  border: 1px solid var(--k-border2); border-radius: var(--r-sm);
-  padding: .75rem 1rem; color: var(--k-creme);
-  font-family: 'DM Sans', sans-serif; font-size: .9rem;
-  outline: none; transition: all .25s;
-}
-.form-input::placeholder { color: rgba(250,244,236,.25); }
-.form-input:focus { border-color: var(--k-orange); background: rgba(244,98,42,.04); box-shadow: 0 0 0 3px rgba(244,98,42,.1); }
-select.form-input { cursor: pointer; }
-select.form-input option { background: var(--k-ink2); }
+    /* BARRE LATÉRALE GAUCHE (NAV) */
+    .sidebar-left {
+      background-color: var(--color-ink);
+      color: white;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+    @media (max-width: 767px) {
+      .sidebar-left { display: none; } /* TODO: Menu mobile */
+    }
+    .sidebar-brand {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      color: var(--color-orange);
+      letter-spacing: 2px;
+      margin-bottom: 3rem;
+    }
+    .nav-menu {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.9rem 1.2rem;
+      border-radius: var(--radius-sm);
+      font-weight: 500;
+      color: #aaa;
+      transition: var(--transition-fast);
+    }
+    .nav-item a:hover, .nav-item.active a {
+      color: white;
+      background-color: var(--color-charcoal);
+    }
+    .nav-item.active a i {
+      color: var(--color-orange);
+    }
+    
+    .sidebar-profile-card {
+      background-color: var(--color-charcoal);
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-top: auto;
+    }
+    .sidebar-profile-card img {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .sidebar-profile-card .info h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 140px;
+    }
+    .sidebar-profile-card .info p {
+      font-size: 0.8rem;
+      color: #888;
+    }
+    .btn-logout {
+      background: none;
+      border: none;
+      color: #ff4a4a;
+      cursor: pointer;
+      font-size: 1.1rem;
+      margin-left: auto;
+      padding: 0.3rem;
+    }
 
-/* Toast */
-.toast {
-  position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(80px);
-  background: var(--k-ink3); border: 1px solid var(--k-border);
-  border-radius: var(--r); padding: .75rem 1.5rem;
-  font-size: .88rem; font-weight: 600;
-  z-index: 9999; transition: transform .35s cubic-bezier(.4,0,.2,1);
-  box-shadow: 0 8px 32px rgba(0,0,0,.5);
-  white-space: nowrap;
-}
-.toast.show { transform: translateX(-50%) translateY(0); }
-.toast.success { color: var(--k-vert); border-color: rgba(29,185,106,.3); }
-.toast.error   { color: #ef4444;       border-color: rgba(239,68,68,.3); }
-.toast.info    { color: var(--k-or);   border-color: rgba(232,168,48,.3); }
+    /* CONTENEUR CENTRAL (MAIN CONTENT) */
+    .main-content {
+      padding: 2rem 1.5rem;
+      max-width: 720px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    @media (min-width: 1200px) {
+      .main-content { max-width: 100%; padding: 2.5rem 3rem; }
+    }
+    
+    .view-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+    }
+    .view-header h2 {
+      font-family: var(--font-serif);
+      font-size: 2.2rem;
+    }
 
-/* Avatar */
-.avatar {
-  border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  font-size: 1.2rem; flex-shrink: 0; position: relative;
-}
-.av-sm  { width: 32px; height: 32px; font-size: .85rem; }
-.av-md  { width: 44px; height: 44px; font-size: 1.2rem; }
-.av-lg  { width: 56px; height: 56px; font-size: 1.5rem; }
-.av-orange { background: linear-gradient(135deg, #F4622A, #C92B1A); }
-.av-vert   { background: linear-gradient(135deg, #1DB96A, #0f8f4d); }
-.av-or     { background: linear-gradient(135deg, #E8A830, #c4831a); }
-.av-marron { background: linear-gradient(135deg, #7A4528, #3d1f0e); }
-.av-violet { background: linear-gradient(135deg, #7c3aed, #4c1d95); }
-.av-bleu   { background: linear-gradient(135deg, #0ea5e9, #0369a1); }
+    /* FIL D'ACTUALITÉ (FEED) */
+    .feed-composer {
+      background: white;
+      border: 2px solid var(--color-gray-light);
+      border-radius: var(--radius-md);
+      padding: 1.2rem;
+      margin-bottom: 2.5rem;
+    }
+    .composer-inputs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .composer-inputs img {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .composer-inputs textarea {
+      width: 100%;
+      border: none;
+      resize: none;
+      outline: none;
+      padding-top: 0.5rem;
+      font-size: 1.05rem;
+    }
+    .composer-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--color-gray-light);
+      padding-top: 0.8rem;
+    }
+    .media-triggers {
+      display: flex;
+      gap: 1rem;
+      color: #666;
+    }
+    .media-triggers button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: var(--transition-fast);
+    }
+    .media-triggers button:hover { color: var(--color-orange); }
 
-.online-dot {
-  position: absolute; bottom: 1px; right: 1px;
-  width: 12px; height: 12px; background: var(--k-vert);
-  border: 2px solid var(--k-ink2); border-radius: 50%;
-}
+    /* LES POSTS CARTES */
+    .kultur-card {
+      background: white;
+      border: 2px solid var(--color-gray-light);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .card-header img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .card-header .meta h4 {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+    .card-header .meta p {
+      font-size: 0.85rem;
+      color: #666;
+    }
+    .card-body p {
+      font-size: 1.05rem;
+      margin-bottom: 1rem;
+    }
+    .card-media-wrap {
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    .card-media-wrap img {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+      display: block;
+    }
+    .card-actions {
+      display: flex;
+      gap: 2rem;
+      border-top: 1px solid var(--color-gray-light);
+      padding-top: 0.8rem;
+      color: #555;
+    }
+    .action-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.95rem;
+      transition: var(--transition-fast);
+    }
+    .action-btn:hover { color: var(--color-orange); }
 
-/* ═══ NAVBAR ═══ */
-#navbar {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 999;
-  height: 60px; background: rgba(15,10,6,.88);
-  backdrop-filter: blur(24px); border-bottom: 1px solid var(--k-border);
-  display: flex; align-items: center; padding: 0 1.5rem; gap: 1rem;
-}
-.nav-logo {
-  font-family: 'Bebas Neue', sans-serif; font-size: 1.9rem;
-  letter-spacing: 4px; color: var(--k-creme); line-height: 1; cursor: pointer; flex-shrink: 0;
-}
-.nav-logo span { color: var(--k-orange); }
-.nav-links { display: flex; gap: .25rem; list-style: none; margin-left: 1.5rem; }
-.nav-links a {
-  display: block; padding: .45rem .9rem; border-radius: var(--r-sm);
-  color: var(--k-muted); text-decoration: none;
-  font-size: .83rem; font-weight: 600; letter-spacing: .5px; transition: all .2s;
-}
-.nav-links a:hover { color: var(--k-creme); background: rgba(250,244,236,.06); }
-.nav-links a.active { color: var(--k-orange); background: rgba(244,98,42,.1); }
-.nav-spacer { flex: 1; }
-.nav-search {
-  display: flex; align-items: center; gap: .5rem;
-  background: rgba(250,244,236,.06); border: 1px solid var(--k-border2);
-  border-radius: 100px; padding: .4rem 1rem; width: 200px; transition: all .3s;
-}
-.nav-search:focus-within { border-color: var(--k-orange); width: 260px; }
-.nav-search input { background: none; border: none; outline: none; color: var(--k-creme); font-family: 'DM Sans', sans-serif; font-size: .82rem; width: 100%; }
-.nav-search input::placeholder { color: var(--k-muted); }
-.nav-icons { display: flex; gap: .3rem; align-items: center; }
-.nav-icon-btn {
-  width: 36px; height: 36px; border-radius: var(--r-sm);
-  background: none; border: none; color: var(--k-muted); font-size: 1rem;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: all .2s; position: relative;
-}
-.nav-icon-btn:hover { background: rgba(250,244,236,.08); color: var(--k-creme); }
-.notif-badge {
-  position: absolute; top: 4px; right: 4px;
-  width: 8px; height: 8px; background: var(--k-rouge);
-  border-radius: 50%; border: 1.5px solid var(--k-ink);
-  animation: dotPulse 2s ease infinite;
-}
-@keyframes dotPulse { 0%,100%{opacity:1}50%{opacity:.3} }
-.nav-avatar-btn {
-  width: 36px; height: 36px; border-radius: 50%; cursor: pointer;
-  background: linear-gradient(135deg,#F4622A,#C92B1A);
-  display: flex; align-items: center; justify-content: center; font-size: .9rem;
-  border: 2px solid var(--k-border); transition: border-color .2s;
-}
-.nav-avatar-btn:hover { border-color: var(--k-orange); }
+    /* BARRE LATÉRALE DROITE (DISCOVER / TRENDS) */
+    .sidebar-right {
+      background-color: var(--color-cream);
+      border-left: 2px solid var(--color-gray-light);
+      padding: 2.5rem 1.5rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    @media (max-width: 1199px) { .sidebar-right { display: none; } }
+    
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+    }
+    .artist-suggestion-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .artist-row {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .artist-row img {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .artist-row .details h5 {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .artist-row .details p {
+      font-size: 0.8rem;
+      color: #666;
+    }
+    .btn-follow-mini {
+      margin-line-start: auto;
+      background: var(--color-ink);
+      color: white;
+      border: none;
+      padding: 0.4rem 1rem;
+      border-radius: var(--radius-lg);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
 
-/* Nav user info */
-#nav-user-info {
-  display: flex; align-items: center; gap: .6rem;
-  background: rgba(250,244,236,.06); border: 1px solid var(--k-border2);
-  border-radius: 100px; padding: .3rem .8rem .3rem .4rem;
-  font-size: .8rem; font-weight: 600; color: var(--k-creme);
-}
-#nav-user-info .av-sm { font-size: .75rem; }
+    /* --- 3. MODULE DE DISCUSSION (CHAT) --- */
+    .chat-wrapper {
+      display: grid;
+      grid-template-columns: 1fr;
+      height: calc(100vh - 8rem);
+      background: white;
+      border: 2px solid var(--color-gray-light);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    @media (min-width: 992px) {
+      .chat-wrapper { grid-template-columns: 280px 1fr; }
+    }
+    .chat-threads-sidebar {
+      border-right: 2px solid var(--color-gray-light);
+      overflow-y: auto;
+    }
+    @media (max-width: 991px) { .chat-threads-sidebar { display: none; } }
+    
+    .thread-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 1rem;
+      border-bottom: 1px solid var(--color-gray-light);
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+    .thread-item:hover, .thread-item.active { background-color: var(--color-cream); }
+    .thread-item img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+    .thread-item .meta h5 { font-size: 0.95rem; font-weight: 600; }
+    .thread-item .meta p { font-size: 0.8rem; color: #777; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+    
+    .chat-main-area {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background-color: var(--color-cream);
+    }
+    .chat-header-bar {
+      background: white;
+      padding: 1rem 1.5rem;
+      border-bottom: 2px solid var(--color-gray-light);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .chat-header-bar img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; }
+    .chat-body-messages {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .msg-bubble {
+      max-width: 70%;
+      padding: 0.8rem 1.2rem;
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      position: relative;
+    }
+    .msg-bubble.received {
+      background-color: white;
+      align-self: flex-start;
+      border-bottom-left-radius: 2px;
+      border: 1px solid var(--color-gray-light);
+    }
+    .msg-bubble.sent {
+      background-color: var(--color-ink);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 2px;
+    }
+    .chat-input-bar {
+      background: white;
+      padding: 1rem;
+      border-top: 2px solid var(--color-gray-light);
+      display: flex;
+      gap: 0.8rem;
+    }
+    .chat-input-bar input { flex: 1; border: 1px solid var(--color-gray-light); padding: 0.7rem 1rem; border-radius: var(--radius-lg); outline: none; }
+    .btn-chat-send { background: var(--color-orange); color: white; border: none; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-/* ═══ PAGE SYSTEM ═══ */
-.page { display: none; min-height: 100vh; padding-top: 60px; animation: pageIn .35s cubic-bezier(.4,0,.2,1); }
-.page.active { display: block; }
-@keyframes pageIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-
-/* ═══ PAGE ACCUEIL ═══ */
-#page-accueil { background: var(--k-ink); }
-.hero {
-  min-height: calc(100vh - 60px); position: relative;
-  display: flex; flex-direction: column; justify-content: center; overflow: hidden; padding: 5rem 2rem 4rem;
-}
-.hero-bg {
-  position: absolute; inset: 0;
-  background:
-    repeating-linear-gradient(0deg, transparent 0px, transparent 39px, rgba(244,98,42,.05) 39px, rgba(244,98,42,.05) 40px),
-    repeating-linear-gradient(90deg, transparent 0px, transparent 39px, rgba(232,168,48,.04) 39px, rgba(232,168,48,.04) 40px),
-    repeating-linear-gradient(60deg, transparent 0px, transparent 79px, rgba(29,185,106,.025) 79px, rgba(29,185,106,.025) 80px);
-  pointer-events: none;
-}
-.hero-glow { position: absolute; pointer-events: none; border-radius: 50%; filter: blur(100px); opacity: .5; animation: breathe 7s ease-in-out infinite; }
-.hero-glow-1 { width:700px;height:700px;background:radial-gradient(circle,#F4622A44,transparent 70%);top:-200px;right:-150px; }
-.hero-glow-2 { width:500px;height:500px;background:radial-gradient(circle,#1DB96A33,transparent 70%);bottom:-100px;left:-100px;animation-delay:3.5s; }
-@keyframes breathe { 0%,100%{transform:scale(1);opacity:.45}50%{transform:scale(1.15);opacity:.65} }
-
-.hero-inner {
-  position: relative; z-index: 2;
-  max-width: 1100px; margin: 0 auto; width: 100%;
-  display: grid; grid-template-columns: 1fr 420px; gap: 4rem; align-items: center;
-}
-.hero-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(4rem,10vw,8.5rem); line-height: .95; letter-spacing: 3px; color: var(--k-creme);
-  margin-bottom: 1.5rem; animation: fadeUp .6s ease .15s both;
-}
-.hero-title .accent { color: var(--k-orange); }
-.hero-title .stroke { color: transparent; -webkit-text-stroke: 2px var(--k-or); }
-.hero-subtitle {
-  font-family: 'DM Serif Display', serif; font-size: 1.2rem; font-style: italic;
-  color: rgba(250,244,236,.65); line-height: 1.65; max-width: 520px;
-  margin-bottom: 2.5rem; animation: fadeUp .6s ease .2s both;
-}
-.hero-cta { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 3.5rem; animation: fadeUp .6s ease .25s both; }
-.hero-stats { display: flex; gap: 2.5rem; animation: fadeUp .6s ease .3s both; }
-.hstat-num { font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:2px;color:var(--k-or);line-height:1; }
-.hstat-label { font-size:.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--k-muted);margin-top:.2rem; }
-
-/* Hero phone */
-.hero-right { position: relative; animation: fadeUp .6s ease .2s both; }
-.hero-phone {
-  background: var(--k-ink2); border: 1px solid var(--k-border); border-radius: 28px; overflow: hidden;
-  box-shadow: 0 40px 80px rgba(0,0,0,.6),0 0 0 1px rgba(244,98,42,.15);
-}
-.hp-bar {
-  background: var(--k-ink3); height: 48px;
-  display: flex; align-items: center; justify-content: space-between; padding: 0 1.2rem;
-  border-bottom: 1px solid var(--k-border2);
-}
-.hp-bar-logo { font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:3px;color:var(--k-orange); }
-.hp-post { padding:1rem;border-bottom:1px solid var(--k-border2); }
-.hp-post-hd { display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem; }
-.hp-post-name { font-size:.82rem;font-weight:700;color:var(--k-creme); }
-.hp-post-meta { font-size:.68rem;color:var(--k-muted);margin-top:.05rem; }
-.hp-post-img { width:100%;height:120px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin-bottom:.7rem; }
-.hp-actions { display:flex;gap:1rem; }
-.hp-action { font-size:.72rem;font-weight:600;color:var(--k-muted);display:flex;align-items:center;gap:.3rem;cursor:pointer; }
-
-.float-card {
-  position: absolute; background: rgba(28,18,8,.92); border: 1px solid var(--k-border);
-  border-radius: var(--r); padding: .75rem 1rem; backdrop-filter: blur(20px);
-  display: flex; align-items: center; gap: .7rem;
-  box-shadow: 0 8px 32px rgba(0,0,0,.4); animation: floatAnim 4s ease-in-out infinite;
-}
-.float-card-2 { animation-delay: 2s; }
-@keyframes floatAnim { 0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)} }
-.fc-icon { font-size:1.3rem;flex-shrink:0; }
-.fc-text { font-size:.73rem;color:rgba(250,244,236,.8); }
-.fc-text strong { display:block;color:var(--k-creme);font-size:.78rem; }
-
-/* Features */
-.features-section { background: var(--k-ink2); padding: 6rem 2rem; border-top: 1px solid var(--k-border); }
-.features-header { text-align: center; margin-bottom: 3.5rem; }
-.features-title { font-family:'DM Serif Display',serif;font-size:clamp(2rem,5vw,3.5rem);color:var(--k-creme);margin-top:.5rem;line-height:1.2; }
-.features-title em { color:var(--k-orange);font-style:italic; }
-.feat-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;max-width:1100px;margin:0 auto; }
-.feat-card {
-  background:rgba(250,244,236,.025);border:1px solid var(--k-border);border-radius:var(--r);
-  padding:2rem 1.75rem;transition:all .3s;position:relative;overflow:hidden;
-}
-.feat-card::before { content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--k-orange),transparent);transform:scaleX(0);transition:transform .4s; }
-.feat-card:hover { transform:translateY(-5px);border-color:rgba(244,98,42,.35); }
-.feat-card:hover::before { transform:scaleX(1); }
-.feat-icon { font-size:2rem;margin-bottom:1rem;display:block; }
-.feat-title { font-size:1rem;font-weight:700;color:var(--k-creme);margin-bottom:.5rem; }
-.feat-desc { font-size:.88rem;color:var(--k-muted);line-height:1.6; }
-
-.cta-banner { background:linear-gradient(135deg,var(--k-marron),var(--k-rouge) 50%,var(--k-ink));padding:5rem 2rem;text-align:center;position:relative;overflow:hidden; }
-.cta-banner::before { content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,.02) 40px,rgba(255,255,255,.02) 41px); }
-.cta-banner-inner { position:relative;z-index:1; }
-.cta-banner-title { font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,8vw,6rem);letter-spacing:4px;color:var(--k-creme);line-height:1;margin-bottom:.5rem; }
-.cta-banner-title span { color:var(--k-or); }
-.cta-banner-sub { font-family:'DM Serif Display',serif;font-style:italic;font-size:1.2rem;color:rgba(250,244,236,.65);margin-bottom:2rem; }
-
-@keyframes fadeUp { from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)} }
-
-/* ═══ PAGE AUTH ═══ */
-#page-auth { background: var(--k-ink); display: none; min-height: 100vh; }
-#page-auth.active { display: grid; grid-template-columns: 1fr 1fr; align-items: stretch; }
-
-.auth-visual {
-  background: linear-gradient(160deg,#7A4528 0%,#C92B1A 45%,#0F0A06 100%);
-  padding: 3rem; display: flex; flex-direction: column; justify-content: space-between;
-  position: relative; overflow: hidden; min-height: calc(100vh - 60px);
-}
-.auth-visual::before {
-  content:'';position:absolute;inset:0;
-  background:repeating-linear-gradient(30deg,transparent,transparent 50px,rgba(255,255,255,.025) 50px,rgba(255,255,255,.025) 51px),
-             repeating-linear-gradient(-30deg,transparent,transparent 50px,rgba(255,255,255,.015) 50px,rgba(255,255,255,.015) 51px);
-}
-.auth-vis-top { position:relative;z-index:1; }
-.auth-vis-logo { font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:5px;color:var(--k-creme);line-height:1; }
-.auth-vis-logo span { color:var(--k-or); }
-.auth-vis-tagline { font-family:'DM Serif Display',serif;font-style:italic;font-size:1.4rem;color:rgba(250,244,236,.8);margin-top:1.5rem;line-height:1.5; }
-.auth-vis-art { position:relative;z-index:1;display:flex;flex-direction:column;gap:.75rem; }
-.auth-testimonial { background:rgba(15,10,6,.45);border:1px solid rgba(250,244,236,.12);border-radius:var(--r);padding:1.2rem 1.5rem;backdrop-filter:blur(10px); }
-.auth-test-quote { font-family:'DM Serif Display',serif;font-style:italic;font-size:.92rem;color:rgba(250,244,236,.82);line-height:1.6;margin-bottom:.75rem; }
-.auth-test-author { display:flex;align-items:center;gap:.6rem; }
-.auth-test-name { font-size:.78rem;font-weight:700;color:var(--k-creme); }
-.auth-test-role { font-size:.68rem;color:var(--k-muted);margin-top:.05rem; }
-
-.auth-form-panel {
-  background: var(--k-ink2); padding: 3rem 2.5rem;
-  overflow-y: auto; display: flex; flex-direction: column; justify-content: center;
-}
-.auth-tabs { display:flex;gap:0;border-bottom:1px solid var(--k-border2);margin-bottom:2rem; }
-.auth-tab {
-  flex:1;padding:.7rem;background:none;border:none;color:var(--k-muted);
-  font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;
-  border-bottom:2px solid transparent;transition:all .25s;letter-spacing:.5px;
-}
-.auth-tab.active { color:var(--k-orange);border-bottom-color:var(--k-orange); }
-.auth-tab:hover:not(.active) { color:var(--k-creme); }
-.auth-panel { display:none; }
-.auth-panel.active { display:block; }
-.auth-title { font-family:'DM Serif Display',serif;font-size:1.9rem;color:var(--k-creme);margin-bottom:.3rem; }
-.auth-subtitle { font-size:.85rem;color:var(--k-muted);margin-bottom:1.8rem; }
-.social-login { display:flex;flex-direction:column;gap:.65rem;margin-bottom:1.5rem; }
-.social-btn {
-  display:flex;align-items:center;gap:.85rem;padding:.72rem 1.2rem;
-  background:rgba(250,244,236,.04);border:1px solid var(--k-border2);border-radius:var(--r-sm);
-  color:var(--k-creme);font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;
-  cursor:pointer;transition:all .25s;
-}
-.social-btn:hover { background:rgba(250,244,236,.08);border-color:rgba(250,244,236,.2); }
-.form-group { margin-bottom:.9rem; }
-.form-row { display:grid;grid-template-columns:1fr 1fr;gap:.9rem; }
-.btn-full { width:100%;padding:.9rem;margin-top:.75rem;border-radius:var(--r-sm);font-size:1rem; }
-.auth-switch { text-align:center;margin-top:1rem;font-size:.82rem;color:var(--k-muted); }
-.auth-switch a { color:var(--k-orange);font-weight:700;cursor:pointer;text-decoration:none; }
-.auth-switch a:hover { text-decoration:underline; }
-
-/* Error hints */
-.field-error { font-size:.72rem;color:#ef4444;margin-top:.3rem;display:none; }
-
-/* ═══ PAGE FEED ═══ */
-#page-feed { background: var(--k-ink); }
-.app-layout {
-  max-width: 1180px; margin: 0 auto; padding: 1.5rem 1rem;
-  display: grid; grid-template-columns: 240px 1fr 280px; gap: 1.5rem;
-}
-.sidebar { position:sticky;top:76px;height:fit-content; }
-.sidebar-user { background:var(--k-ink2);border:1px solid var(--k-border);border-radius:var(--r);overflow:hidden;margin-bottom:1rem; }
-.suser-cover { height:68px;background:linear-gradient(135deg,#7A4528,#F4622A 60%,#C92B1A);position:relative; }
-.suser-av { position:absolute;bottom:-22px;left:1rem;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#F4622A,#C92B1A);display:flex;align-items:center;justify-content:center;font-size:1.2rem;border:3px solid var(--k-ink2); }
-.suser-info { padding:1.8rem 1rem 1rem; }
-.suser-name { font-size:.9rem;font-weight:700;color:var(--k-creme); }
-.suser-role { font-size:.7rem;color:var(--k-orange);font-weight:600;margin-top:.15rem;letter-spacing:.5px; }
-.suser-stats { display:grid;grid-template-columns:repeat(3,1fr);text-align:center;border-top:1px solid var(--k-border2);margin-top:.8rem;padding-top:.8rem; }
-.sstat-num { font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;color:var(--k-or); }
-.sstat-label { font-size:.58rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--k-muted);margin-top:.1rem; }
-.sidebar-menu { background:var(--k-ink2);border:1px solid var(--k-border);border-radius:var(--r);padding:.5rem; }
-.smenu-item { display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;border-radius:var(--r-sm);cursor:pointer;color:var(--k-muted);font-size:.83rem;font-weight:600;transition:all .2s;position:relative; }
-.smenu-item:hover { background:rgba(250,244,236,.05);color:var(--k-creme); }
-.smenu-item.active { background:rgba(244,98,42,.1);color:var(--k-orange); }
-.smenu-icon { font-size:1rem;width:20px;text-align:center; }
-.smenu-badge { margin-left:auto;background:var(--k-rouge);color:#fff;font-size:.6rem;font-weight:700;padding:.12rem .4rem;border-radius:100px; }
-
-.feed { min-width: 0; }
-
-.stories-row { display:flex;gap:.75rem;overflow-x:auto;padding-bottom:.25rem;margin-bottom:1.25rem;scrollbar-width:none; }
-.stories-row::-webkit-scrollbar { display:none; }
-.story-item { flex-shrink:0;width:64px;display:flex;flex-direction:column;align-items:center;gap:.35rem;cursor:pointer; }
-.story-ring { width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#F4622A,#E8A830,#1DB96A);padding:2.5px; }
-.story-inner { width:100%;height:100%;border-radius:50%;background:var(--k-ink2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;border:2px solid var(--k-ink); }
-.story-name { font-size:.62rem;color:var(--k-muted);font-weight:600;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:64px; }
-
-.composer { background:var(--k-ink2);border:1px solid var(--k-border);border-radius:var(--r);padding:1rem;margin-bottom:1.25rem; }
-.composer-row { display:flex;align-items:center;gap:.75rem;margin-bottom:.85rem; }
-.composer-field { flex:1;background:rgba(250,244,236,.05);border:1px solid var(--k-border2);border-radius:100px;padding:.65rem 1.2rem;color:rgba(250,244,236,.45);font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;cursor:pointer;transition:all .3s; }
-.composer-field:focus { color:var(--k-creme);border-color:var(--k-orange); }
-.composer-actions { display:flex;gap:.5rem;flex-wrap:wrap; }
-.composer-btn { display:flex;align-items:center;gap:.35rem;padding:.38rem .8rem;background:none;border:1px solid var(--k-border2);border-radius:100px;color:var(--k-muted);font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s; }
-.composer-btn:hover { border-color:var(--k-orange);color:var(--k-orange); }
-
-.post-card { background:var(--k-ink2);border:1px solid var(--k-border);border-radius:var(--r);overflow:hidden;margin-bottom:1.1rem;transition:border-color .25s; }
-.post-card:hover { border-color:rgba(244,98,42,.3); }
-.post-header { display:flex;align-items:flex-start;gap:.8rem;padding:1rem 1rem .6rem; }
-.post-meta { flex:1; }
-.post-name { font-size:.88rem;font-weight:700;color:var(--k-creme);display:flex;align-items:center;gap:.4rem; }
-.verified-icon { color:var(--k-orange);font-size:.75rem; }
-.post-sub { font-size:.72rem;color:var(--k-muted);margin-top:.15rem; }
-.post-sub span { color:var(--k-or);font-weight:600; }
-.post-menu { background:none;border:none;color:var(--k-muted);font-size:1.2rem;cursor:pointer;padding:.2rem;transition:color .2s; }
-.post-menu:hover { color:var(--k-creme); }
-.post-body { padding:0 1rem .75rem;font-size:.9rem;color:rgba(250,244,236,.85);line-height:1.65; }
-.post-body em { color:var(--k-or);font-style:italic; }
-.post-tags { display:flex;flex-wrap:wrap;gap:.35rem;padding:0 1rem .75rem; }
-.post-media { width:100%;background:var(--k-ink3);display:flex;align-items:center;justify-content:center;border-top:1px solid var(--k-border2);border-bottom:1px solid var(--k-border2); }
-.post-media-img { width:100%;aspect-ratio:16/8;display:flex;align-items:center;justify-content:center;font-size:5rem; }
-.post-audio { padding:1rem;display:flex;align-items:center;gap:.85rem;width:100%; }
-.audio-play { width:40px;height:40px;border-radius:50%;background:var(--k-orange);display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;flex-shrink:0;transition:all .25s; }
-.audio-play:hover { transform:scale(1.1); }
-.audio-info { flex:1;min-width:0; }
-.audio-title { font-size:.82rem;font-weight:700;color:var(--k-creme); }
-.audio-bar { height:4px;background:rgba(250,244,236,.12);border-radius:2px;margin-top:.5rem;position:relative; }
-.audio-progress { height:100%;width:40%;background:linear-gradient(90deg,#F4622A,#E8A830);border-radius:2px; }
-.audio-time { font-size:.68rem;color:var(--k-muted);margin-top:.3rem; }
-.post-footer { display:flex;align-items:center;gap:.3rem;padding:.65rem 1rem;border-top:1px solid rgba(250,244,236,.04); }
-.post-action { display:flex;align-items:center;gap:.35rem;background:none;border:none;color:var(--k-muted);font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;padding:.38rem .65rem;border-radius:var(--r-sm);transition:all .2s; }
-.post-action:hover { background:rgba(250,244,236,.05);color:var(--k-creme); }
-.post-action.active-like { color:#ef4444; }
-.pa-spacer { flex:1; }
-
-.sidebar-right { position:sticky;top:76px;height:fit-content;display:flex;flex-direction:column;gap:1rem; }
-.widget { background:var(--k-ink2);border:1px solid var(--k-border);border-radius:var(--r);padding:1.1rem; }
-.widget-title { font-size:.68rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--k-orange);margin-bottom:.9rem; }
-.suggest-row { display:flex;align-items:center;gap:.7rem;padding:.5rem 0;border-bottom:1px solid rgba(250,244,236,.04); }
-.suggest-row:last-child { border-bottom:none; }
-.suggest-info { flex:1;min-width:0; }
-.suggest-name { font-size:.8rem;font-weight:700;color:var(--k-creme);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
-.suggest-role { font-size:.67rem;color:var(--k-muted);margin-top:.1rem; }
-.btn-follow { padding:.28rem .7rem;background:rgba(244,98,42,.1);border:1px solid rgba(244,98,42,.35);border-radius:100px;color:var(--k-orange);font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .2s; }
-.btn-follow:hover { background:var(--k-orange);color:#fff; }
-.btn-follow.following { background:rgba(29,185,106,.1);border-color:rgba(29,185,106,.35);color:var(--k-vert); }
-.trend-row { display:flex;align-items:center;gap:.7rem;padding:.45rem 0; }
-.trend-num { font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:rgba(244,98,42,.25);width:26px;text-align:right; }
-.trend-tag { font-size:.82rem;font-weight:700;color:var(--k-creme); }
-.trend-count { font-size:.68rem;color:var(--k-muted);margin-top:.08rem; }
-
-/* ═══ PAGE PROFIL ═══ */
-#page-profil { background: var(--k-ink); }
-.profile-cover { height:260px;background:linear-gradient(150deg,#7A4528,#F4622A 40%,#C92B1A 70%,#0F0A06);position:relative;overflow:hidden; }
-.profile-cover::after { content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 35px,rgba(255,255,255,.02) 35px,rgba(255,255,255,.02) 36px); }
-.profile-cover-deco { position:absolute;right:8%;top:50%;transform:translateY(-50%);font-size:7rem;opacity:.12;filter:blur(2px);letter-spacing:1rem; }
-.profile-body { max-width:960px;margin:0 auto;padding:0 1.5rem 4rem; }
-.profile-id-row { display:flex;align-items:flex-end;justify-content:space-between;padding:0 0 1.5rem;border-bottom:1px solid var(--k-border2);margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem; }
-.profile-av-wrap { margin-top:-55px;position:relative; }
-.profile-av { width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,#E8A830,#F4622A,#C92B1A);display:flex;align-items:center;justify-content:center;font-size:2.8rem;border:4px solid var(--k-ink);position:relative; }
-.profile-name { font-family:'DM Serif Display',serif;font-size:2rem;color:var(--k-creme);display:flex;align-items:center;gap:.5rem; }
-.profile-handle { font-size:.85rem;color:var(--k-muted);font-weight:600;margin-top:.2rem; }
-.profile-btns { display:flex;gap:.6rem;flex-wrap:wrap;align-items:flex-end; }
-.profile-stats-row { display:flex;gap:2.5rem;padding:1.2rem 0;border-bottom:1px solid var(--k-border2);margin-bottom:1.5rem; }
-.pstat-num { font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:1px;color:var(--k-or);line-height:1; }
-.pstat-label { font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--k-muted);margin-top:.2rem; }
-.profile-content { display:grid;grid-template-columns:1fr 280px;gap:1.5rem; }
-.profile-bio { font-family:'DM Serif Display',serif;font-size:1rem;font-style:italic;color:rgba(250,244,236,.72);line-height:1.7;margin-bottom:.9rem; }
-.profile-tags { display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.5rem; }
-.profile-tabs { display:flex;gap:0;border-bottom:1px solid var(--k-border2);margin-bottom:1.5rem; }
-.ptab { padding:.65rem 1.2rem;background:none;border:none;color:var(--k-muted);font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;transition:all .25s; }
-.ptab:hover { color:var(--k-creme); }
-.ptab.active { color:var(--k-orange);border-bottom-color:var(--k-orange); }
-.gallery { display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem; }
-.gallery-item { aspect-ratio:1;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:2.8rem;cursor:pointer;overflow:hidden;transition:transform .3s;position:relative; }
-.gallery-item:hover { transform:scale(1.03); }
-.info-line { display:flex;align-items:center;gap:.6rem;font-size:.83rem;color:rgba(250,244,236,.68);padding:.4rem 0; }
-.info-line-icon { font-size:.9rem;color:var(--k-muted);width:20px;text-align:center; }
-
-/* ═══ PAGE MESSAGES ═══ */
-#page-messages { background: var(--k-ink); }
-.chat-layout { max-width:1180px;margin:0 auto;padding:1.5rem 1rem;display:grid;grid-template-columns:300px 1fr;gap:1.5rem;height:calc(100vh - 60px - 3rem); }
-.conv-panel { background:var(--k-ink2);border:1px solid var(--k-border);border-radius:var(--r);display:flex;flex-direction:column;overflow:hidden; }
-.conv-header { padding:1rem 1.1rem;border-bottom:1px solid var(--k-border2);display:flex;align-items:center;justify-content:space-between; }
-.conv-header-title { font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;color:var(--k-creme); }
-.conv-search { padding:.7rem 1.1rem;border-bottom:1px solid var(--k-border2); }
-.conv-search input { width:100%;background:rgba(250,244,236,.05);border:1px solid var(--k-border2);border-radius:100px;padding:.45rem .9rem;color:var(--k-creme);font-family:'DM Sans',sans-serif;font-size:.82rem;outline:none;transition:border-color .2s; }
-.conv-search input:focus { border-color:var(--k-orange); }
-.conv-search input::placeholder { color:var(--k-muted); }
-.conv-list { flex:1;overflow-y:auto; }
-.conv-item { display:flex;align-items:center;gap:.75rem;padding:.8rem 1.1rem;cursor:pointer;border-bottom:1px solid rgba(250,244,236,.03);transition:background .2s;position:relative; }
-.conv-item:hover { background:rgba(250,244,236,.04); }
-.conv-item.active { background:rgba(244,98,42,.1);border-left:2px solid var(--k-orange); }
-.conv-info { flex:1;min-width:0; }
-.conv-top { display:flex;justify-content:space-between;align-items:center; }
-.conv-name { font-size:.84rem;font-weight:700;color:var(--k-creme); }
-.conv-time { font-size:.65rem;color:var(--k-muted); }
-.conv-last { font-size:.74rem;color:var(--k-muted);margin-top:.12rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
-.conv-unread { background:var(--k-rouge);color:#fff;font-size:.6rem;font-weight:700;padding:.12rem .4rem;border-radius:100px;margin-left:auto;flex-shrink:0; }
-.chat-window { background:var(--k-ink2);border:1px solid var(--k-border);border-radius:var(--r);display:flex;flex-direction:column;overflow:hidden; }
-.chat-topbar { padding:.9rem 1.2rem;border-bottom:1px solid var(--k-border2);display:flex;align-items:center;gap:.9rem; }
-.chat-topbar-info { flex:1; }
-.chat-topbar-name { font-size:.92rem;font-weight:700;color:var(--k-creme); }
-.chat-topbar-status { font-size:.7rem;color:var(--k-vert);margin-top:.1rem; }
-.chat-topbar-actions { display:flex;gap:.3rem; }
-.icon-btn { background:none;border:none;color:var(--k-muted);font-size:1rem;cursor:pointer;padding:.35rem;border-radius:var(--r-sm);transition:all .2s; }
-.icon-btn:hover { background:rgba(250,244,236,.07);color:var(--k-creme); }
-.chat-msgs { flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.65rem; }
-.msg-day-label { text-align:center;font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--k-muted);padding:.4rem 0; }
-.msg-row { display:flex;align-items:flex-end;gap:.5rem; }
-.msg-row.own { flex-direction:row-reverse; }
-.msg-av-sm { width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0; }
-.msg-bubble { max-width:62%;padding:.65rem .95rem;border-radius:18px;font-size:.88rem;line-height:1.55; }
-.msg-row:not(.own) .msg-bubble { background:rgba(250,244,236,.07);border:1px solid rgba(250,244,236,.05);color:var(--k-creme);border-bottom-left-radius:4px; }
-.msg-row.own .msg-bubble { background:linear-gradient(135deg,rgba(244,98,42,.28),rgba(201,43,26,.22));border:1px solid rgba(244,98,42,.28);color:var(--k-creme);border-bottom-right-radius:4px; }
-.msg-time { font-size:.6rem;color:var(--k-muted);margin-top:.2rem; }
-.msg-row.own .msg-time { text-align:right; }
-.chat-input-bar { padding:.85rem 1rem;border-top:1px solid var(--k-border2);display:flex;align-items:center;gap:.65rem; }
-.chat-attach { display:flex;gap:.2rem; }
-.chat-field { flex:1;background:rgba(250,244,236,.05);border:1px solid var(--k-border2);border-radius:100px;padding:.6rem 1.1rem;color:var(--k-creme);font-family:'DM Sans',sans-serif;font-size:.87rem;outline:none;transition:border-color .25s; }
-.chat-field:focus { border-color:var(--k-orange); }
-.chat-field::placeholder { color:var(--k-muted); }
-.chat-send-btn { width:40px;height:40px;border-radius:50%;flex-shrink:0;background:var(--k-orange);border:none;color:#fff;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;box-shadow:0 4px 12px rgba(244,98,42,.3); }
-.chat-send-btn:hover { transform:scale(1.08); }
-
-/* Loading spinner */
-.spinner { width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block; }
-@keyframes spin { to { transform:rotate(360deg); } }
-
-@media (max-width:1024px) {
-  .app-layout { grid-template-columns:1fr; }
-  .sidebar,.sidebar-right { display:none; }
-  .hero-inner { grid-template-columns:1fr; }
-  .hero-right { display:none; }
-  #page-auth.active { grid-template-columns:1fr; }
-  .auth-visual { display:none; }
-  .chat-layout { grid-template-columns:1fr; }
-  .conv-panel { display:none; }
-  .profile-content { grid-template-columns:1fr; }
-  .profile-side-col { display:none; }
-}
-</style>
+    /* --- 4. PANNEAU DE PROFIL --- */
+    .profile-hero {
+      background: white;
+      border: 2px solid var(--color-gray-light);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      margin-bottom: 2rem;
+    }
+    .profile-avatar-big {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--color-cream);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-top: -1rem;
+      margin-bottom: 1rem;
+    }
+    .profile-hero h2 { font-family: var(--font-serif); font-size: 2rem; margin-bottom: 0.2rem; }
+    .profile-hero p.text-muted { color: #666; font-weight: 500; margin-bottom: 1rem; }
+    .profile-stats { display: flex; justify-content: center; gap: 3rem; margin: 1.5rem 0; border-top: 1px solid var(--color-gray-light); border-bottom: 1px solid var(--color-gray-light); padding: 1rem 0; }
+    .stat-box h6 { font-size: 1.3rem; font-weight: 700; color: var(--color-ink); }
+    .stat-box p { font-size: 0.85rem; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+    
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .portfolio-item {
+      aspect-ratio: 1;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+    }
+    .portfolio-item img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition-smooth); }
+    .portfolio-item:hover img { transform: scale(1.05); }
+  </style>
 </head>
 <body>
 
-<!-- Toast -->
-<div class="toast" id="toast"></div>
-
-<!-- NAVBAR -->
-<nav id="navbar">
-  <div class="nav-logo" onclick="goPage('accueil')">KUL<span>T</span>UR</div>
-  <ul class="nav-links" id="nav-links">
-    <li><a href="#" class="active" data-page="accueil" onclick="navClick(event,this)">Accueil</a></li>
-    <li id="nav-feed-li" style="display:none"><a href="#" data-page="feed" onclick="navClick(event,this)">Fil</a></li>
-    <li id="nav-profil-li" style="display:none"><a href="#" data-page="profil" onclick="navClick(event,this)">Profil</a></li>
-    <li id="nav-messages-li" style="display:none"><a href="#" data-page="messages" onclick="navClick(event,this)">Messages</a></li>
-  </ul>
-  <div class="nav-spacer"></div>
-  <div class="nav-search">
-    <span style="color:var(--k-muted)">🔍</span>
-    <input type="text" placeholder="Artistes, œuvres, tendances…">
-  </div>
-  <div class="nav-icons">
-    <button class="nav-icon-btn" id="btn-notif" style="display:none">🔔<span class="notif-badge"></span></button>
-    <button class="nav-icon-btn" id="btn-msg-nav" style="display:none" onclick="goPage('messages')">💬</button>
-  </div>
-  <!-- Logged-in user info -->
-  <div id="nav-user-info" style="display:none">
-    <div class="avatar av-sm av-orange">👤</div>
-    <span id="nav-user-email" style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
-  </div>
-  <!-- Buttons switching based on auth state -->
-  <button class="btn btn-primary btn-sm" id="nav-join-btn" style="margin-left:.5rem;flex-shrink:0" onclick="goPage('auth')">Rejoindre</button>
-  <button class="btn btn-ghost btn-sm" id="nav-logout-btn" style="margin-left:.5rem;flex-shrink:0;display:none" onclick="handleLogout()">Déconnexion</button>
-</nav>
-
-
-<!-- PAGE ACCUEIL -->
-<div class="page active" id="page-accueil">
-  <section class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-glow hero-glow-1"></div>
-    <div class="hero-glow hero-glow-2"></div>
-    <div class="hero-inner">
-      <div class="hero-left">
-        <div style="margin-bottom:1.5rem;animation:fadeUp .6s ease .1s both">
-          <span class="pill pill-orange">🌍 Réseau social culturel africain</span>
+  <!-- ================================================================= -->
+  <!-- ZONE DE CONNEXION (PAGE : LOGIN)                                  -->
+  <!-- ================================================================= -->
+  <div id="page-login" class="page active">
+    <div class="auth-container">
+      <div class="auth-banner">
+        <div class="logo-brand">KULTUR.</div>
+        <div class="quote-box">
+          <h1>Mettez en lumière votre art, connectez votre vision.</h1>
+          <p>Le point de rencontre exclusif des artistes, cinéastes, designers et musiciens du continent.</p>
         </div>
-        <h1 class="hero-title">LA <span class="accent">CULTURE</span><br><span class="stroke">CONNECTE</span><br>LES ÂMES</h1>
-        <p class="hero-subtitle">KULTUR rassemble artistes, musiciens, écrivains et passionnés de culture pour partager leurs créations, collaborer et célébrer la richesse de l'Afrique créative.</p>
-        <div class="hero-cta">
-          <button class="btn btn-primary btn-lg" onclick="goPage('auth')">Créer mon profil gratuit</button>
-          <button class="btn btn-ghost btn-lg" onclick="goPage('feed')">Explorer le fil →</button>
-        </div>
-        <div class="hero-stats">
-          <div><div class="hstat-num">50K+</div><div class="hstat-label">Créateurs</div></div>
-          <div><div class="hstat-num">32</div><div class="hstat-label">Pays</div></div>
-          <div><div class="hstat-num">180K+</div><div class="hstat-label">Œuvres</div></div>
-          <div><div class="hstat-num">4.9★</div><div class="hstat-label">Note</div></div>
-        </div>
+        <div><!-- Spacer --></div>
       </div>
-      <div class="hero-right">
-        <div class="float-card" style="position:absolute;top:-24px;left:-70px;z-index:10">
-          <span class="fc-icon">🎵</span>
-          <div class="fc-text"><strong>Nouveau single</strong>Kofi vient de publier</div>
-        </div>
-        <div class="float-card float-card-2" style="position:absolute;bottom:40px;right:-60px;z-index:10">
-          <span class="fc-icon">❤️</span>
-          <div class="fc-text"><strong>847 likes</strong>sur ta dernière photo</div>
-        </div>
-        <div class="hero-phone">
-          <div class="hp-bar"><span class="hp-bar-logo">KULTUR</span><span style="font-size:.85rem">🔔 💬 👤</span></div>
-          <div style="display:flex;gap:.7rem;padding:.8rem 1rem;background:var(--k-ink3);border-bottom:1px solid var(--k-border2)">
-            <div style="flex-shrink:0;width:56px;display:flex;flex-direction:column;align-items:center;gap:.3rem">
-              <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#F4622A,#E8A830,#1DB96A);padding:2.5px;display:flex;align-items:center;justify-content:center"><div style="width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#F4622A,#C92B1A);display:flex;align-items:center;justify-content:center;font-size:1.2rem">🎨</div></div>
-              <span style="font-size:.58rem;color:var(--k-muted)">Amara</span>
+      <div class="auth-form-side">
+        <div class="auth-card">
+          <h2>Bon retour !</h2>
+          <p class="subtitle">Entrez vos identifiants pour rejoindre l'arène.</p>
+          
+          <form id="login-form">
+            <div class="form-group">
+              <label>Adresse e-mail</label>
+              <input type="email" id="login-email" class="form-control" placeholder="artiste@kultur.com" required>
             </div>
-            <div style="flex-shrink:0;width:56px;display:flex;flex-direction:column;align-items:center;gap:.3rem">
-              <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#F4622A,#E8A830,#1DB96A);padding:2.5px;display:flex;align-items:center;justify-content:center"><div style="width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#1DB96A,#0f8f4d);display:flex;align-items:center;justify-content:center;font-size:1.2rem">🎵</div></div>
-              <span style="font-size:.58rem;color:var(--k-muted)">Kofi</span>
+            <div class="form-group">
+              <label>Mot de passe</label>
+              <input type="password" id="login-pass" class="form-control" placeholder="••••••••" required>
             </div>
-            <div style="flex-shrink:0;width:56px;display:flex;flex-direction:column;align-items:center;gap:.3rem">
-              <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#F4622A,#E8A830,#1DB96A);padding:2.5px;display:flex;align-items:center;justify-content:center"><div style="width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#E8A830,#c4831a);display:flex;align-items:center;justify-content:center;font-size:1.2rem">📸</div></div>
-              <span style="font-size:.58rem;color:var(--k-muted)">Fatou</span>
-            </div>
-          </div>
-          <div class="hp-post">
-            <div class="hp-post-hd">
-              <div class="avatar av-sm av-orange">🎨</div>
-              <div><div class="hp-post-name">Amara Diallo ✓</div><div class="hp-post-meta">Peintre · Yaoundé · 2h</div></div>
-            </div>
-            <div class="hp-post-img" style="background:linear-gradient(135deg,rgba(122,69,40,.5),rgba(244,98,42,.3),rgba(15,10,6,.8))">🎨</div>
-            <div class="hp-actions"><div class="hp-action">❤️ 847</div><div class="hp-action">💬 124</div></div>
-          </div>
+            <button type="submit" id="login-btn" class="btn-kultur" style="width: 100%; justify-content: center; margin-top: 1rem;">
+              Se connecter
+            </button>
+          </form>
+          
+          <p style="margin-top: 2rem; font-size: 0.95rem; text-align: center; color: #555;">
+            Nouveau sur la plateforme ? <a href="#" onclick="goPage('register')" style="color: var(--color-orange); font-weight: 600;">Créer un profil d'artiste</a>
+          </p>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="features-section">
-    <div class="features-header">
-      <div class="section-eyebrow">Pourquoi KULTUR ?</div>
-      <h2 class="features-title">Un espace fait pour les <em>créateurs africains</em></h2>
-    </div>
-    <div class="feat-grid">
-      <div class="feat-card"><span class="feat-icon">🎨</span><div class="feat-title">Mur de créations</div><div class="feat-desc">Publie photos, vidéos, audios, textes dans un fil immersif dédié à l'expression artistique.</div></div>
-      <div class="feat-card"><span class="feat-icon">💬</span><div class="feat-title">Chat communautaire</div><div class="feat-desc">Messagerie privée et groupes thématiques autour d'un artiste, d'un mouvement ou d'une tradition.</div></div>
-      <div class="feat-card"><span class="feat-icon">🤝</span><div class="feat-title">Collaborations</div><div class="feat-desc">Trouve des partenaires créatifs par affinité artistique, région ou discipline.</div></div>
-      <div class="feat-card"><span class="feat-icon">🥁</span><div class="feat-title">Traditions vivantes</div><div class="feat-desc">Documente et partage danses, griots, artisanat, langues. La mémoire collective africaine.</div></div>
-      <div class="feat-card"><span class="feat-icon">🎤</span><div class="feat-title">Lives & Événements</div><div class="feat-desc">Organise et participe à des concerts, expos, ateliers. Connecte le physique et le numérique.</div></div>
-      <div class="feat-card"><span class="feat-icon">💎</span><div class="feat-title">Monétisation</div><div class="feat-desc">Abonnement premium, marketplace artistique, monnaie interne. Vis de ton art.</div></div>
-    </div>
-  </section>
-
-  <div class="cta-banner">
-    <div class="cta-banner-inner">
-      <div class="cta-banner-title">REJOINS <span>KULTUR</span></div>
-      <div class="cta-banner-sub">L'Afrique créative n'attend plus que toi.</div>
-      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
-        <button class="btn btn-primary btn-lg" onclick="goPage('auth')">Créer mon compte</button>
-        <button class="btn btn-ghost btn-lg" onclick="goPage('feed')">Voir la plateforme</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- PAGE AUTH -->
-<div class="page" id="page-auth">
-  <div class="auth-visual">
-    <div class="auth-vis-top">
-      <div class="auth-vis-logo">KUL<span>T</span>UR</div>
-      <div class="auth-vis-tagline">« Le premier réseau social<br>dédié à la culture africaine. »</div>
-    </div>
-    <div class="auth-vis-art">
-      <div class="auth-testimonial">
-        <div class="auth-test-quote">« KULTUR m'a permis de vendre mes peintures à des collectionneurs de 8 pays. Impossible avant sur les autres plateformes. »</div>
-        <div class="auth-test-author"><div class="avatar av-sm av-orange">🎨</div><div><div class="auth-test-name">Amara Diallo</div><div class="auth-test-role">Artiste plasticien, Yaoundé</div></div></div>
-      </div>
-      <div class="auth-testimonial">
-        <div class="auth-test-quote">« En 3 mois, j'ai trouvé mes deux co-auteurs pour mon roman grâce à KULTUR. La communauté est incroyable. »</div>
-        <div class="auth-test-author"><div class="avatar av-sm av-or">📖</div><div><div class="auth-test-name">Fatou Ndiaye</div><div class="auth-test-role">Écrivaine, Dakar</div></div></div>
       </div>
     </div>
   </div>
 
-  <div class="auth-form-panel">
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="tab-register" onclick="switchAuthTab('register')">Inscription</button>
-      <button class="auth-tab" id="tab-login" onclick="switchAuthTab('login')">Connexion</button>
+
+  <!-- ================================================================= -->
+  <!-- ZONE D'INSCRIPTION (PAGE : REGISTER)                              -->
+  <!-- ================================================================= -->
+  <div id="page-register" class="page">
+    <div class="auth-container">
+      <div class="auth-banner">
+        <div class="logo-brand">KULTUR.</div>
+        <div class="quote-box">
+          <h1>Rejoignez le mouvement créatif.</h1>
+          <p>Exposez vos œuvres, collaborez sur des projets uniques et construisez votre audience.</p>
+        </div>
+        <div><!-- Spacer --></div>
+      </div>
+      <div class="auth-form-side">
+        <div class="auth-card">
+          <h2>Créer un compte</h2>
+          <p class="subtitle">Remplissez vos informations pour initialiser votre vitrine.</p>
+          
+          <form id="register-form">
+            <div class="form-group">
+              <label>Nom complet d'artiste</label>
+              <input type="text" id="reg-name" class="form-control" placeholder="Ex: Amara Diallo" required>
+            </div>
+            <div class="form-group">
+              <label>Je suis...</label>
+              <select id="reg-type" class="form-control" required>
+                <option value="Artiste Visuel / Peintre">Artiste Visuel / Peintre</option>
+                <option value="Cinéaste / Réalisateur">Cinéaste / Réalisateur</option>
+                <option value="Designer / Graphiste">Designer / Graphiste</option>
+                <option value="Photographe">Photographe</option>
+                <option value="Musicien / Producteur">Musicien / Producteur</option>
+                <option value="Écrivain / Poète">Écrivain / Poète</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Ville & Pays d'attache</label>
+              <input type="text" id="reg-ville" class="form-control" placeholder="Ex: Yaoundé, Cameroun" required>
+            </div>
+            <div class="form-group">
+              <label>Adresse e-mail</label>
+              <input type="email" id="reg-email" class="form-control" placeholder="nom@exemple.com" required>
+            </div>
+            <div class="form-group">
+              <label>Mot de passe (6 caractères min.)</label>
+              <input type="password" id="reg-pass" class="form-control" placeholder="••••••••" required>
+            </div>
+            <button type="submit" id="reg-btn" class="btn-kultur" style="width: 100%; justify-content: center; margin-top: 1rem;">
+              Finaliser l'inscription
+            </button>
+          </form>
+          
+          <p style="margin-top: 1.5rem; font-size: 0.95rem; text-align: center; color: #555;">
+            Déjà inscrit ? <a href="#" onclick="goPage('login')" style="color: var(--color-orange); font-weight: 600;">Se connecter</a>
+          </p>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- REGISTER PANEL -->
-    <div class="auth-panel active" id="auth-register">
-      <div class="auth-title">Créer mon compte</div>
-      <div class="auth-subtitle">Rejoins 50 000 artistes et passionnés sur KULTUR</div>
 
-      <div class="form-row" style="margin-bottom:.9rem">
-        <div class="form-group">
-          <label class="form-label">Prénom</label>
-          <input class="form-input" id="reg-prenom" type="text" placeholder="Jean">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Nom</label>
-          <input class="form-input" id="reg-nom" type="text" placeholder="Mbarga">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input class="form-input" id="reg-email" type="email" placeholder="jean@email.com">
-        <div class="field-error" id="reg-email-err"></div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Mot de passe</label>
-        <input class="form-input" id="reg-password" type="password" placeholder="Min. 6 caractères">
-        <div class="field-error" id="reg-pass-err"></div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Je suis…</label>
-        <select class="form-input" id="reg-type">
-          <option>🎨 Artiste plasticien·ne</option>
-          <option>🎵 Musicien·ne</option>
-          <option>📸 Photographe</option>
-          <option>📖 Écrivain·e</option>
-          <option>🎭 Danseur·se / Comédien·ne</option>
-          <option>🎬 Cinéaste / Vidéaste</option>
-          <option>👗 Styliste / Designer</option>
-          <option>🎤 Spoken word / Poète</option>
-          <option>🌍 Passionné·e de culture</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Ville / Pays</label>
-        <input class="form-input" id="reg-ville" type="text" placeholder="Yaoundé, Cameroun">
-      </div>
-
-      <button class="btn btn-primary btn-full" id="reg-submit-btn" onclick=" async function handleRegister(e) {
-  e.preventDefault();
-  const btn = document.getElementById('reg-btn');
-  const originalText = btn.innerText;
-  btn.innerText = "Création du compte...";
-  btn.disabled = true;
-
-  // 1. Récupération de tous les champs du formulaire
-  const name = document.getElementById('reg-name').value.trim();
-  const email = document.getElementById('reg-email').value.trim();
-  const pass = document.getElementById('reg-pass').value;
-  const typeArtiste = document.getElementById('reg-type').value;
-  const ville = document.getElementById('reg-ville').value.trim();
-
-  if(!name || !email || !pass || !typeArtiste || !ville) {
-    alert("Veuillez remplir tous les champs.");
-    btn.innerText = originalText;
-    btn.disabled = false;
-    return;
-  }
-
-  try {
-    // 2. Importation dynamique d'Authentication ET de Firestore
-    const { getAuth, createUserWithEmailAndPassword, updateProfile } = await import("https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js");
-    const { getFirestore, doc, setDoc } = await import("https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js");
-    
-    const auth = getAuth();
-    const db = getFirestore(); // Initialisation de Firestore
-
-    // 3. Création de l'utilisateur dans Firebase Auth
-    const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-    const user = userCredential.user;
-
-    // 4. Mise à jour du nom d'affichage de base
-    await updateProfile(user, { displayName: name });
-
-    // 5. Enregistrement des données étendues dans la collection "users" de Firestore
-    await setDoc(doc(db, "users", user.uid), {
-      uid: user.uid,
-      nom: name,
-      email: email,
-      typeArtiste: typeArtiste,
-      ville: ville,
-      bio: "Artiste passionné, membre de la communauté KULTUR.", // Bio par défaut modifiable plus tard
-      photoURL: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80", // Avatar par défaut
-      createdAt: new Date()
-    });
-
-    alert("Bienvenue sur KULTUR ! Votre profil est prêt.");
-    goPage('feed');
-
-  } catch (error) {
-    console.error("Erreur d'inscription:", error);
-    let msg = "Une erreur est survenue lors de l'inscription.";
-    if (error.code === 'auth/email-already-in-use') msg = "Cet email est déjà utilisé.";
-    if (error.code === 'auth/weak-password') msg = "Le mot de passe doit contenir au moins 6 caractères.";
-    if (error.code === 'auth/invalid-email') msg = "Format d'email invalide.";
-    alert(msg);
-  } finally {
-    btn.innerText = originalText;
-    btn.disabled = false;
-  }
-}
-async function loadUserProfile(uid) {
-  try {
-    const { getFirestore, doc, getDoc } = await import("https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js");
-    const db = getFirestore();
-    
-    // Récupérer le document de l'utilisateur dans Firestore
-    const docRef = doc(db, "users", uid);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      const data = docSnap.data();
+  <!-- ================================================================= -->
+  <!-- TEMPLATE GENERAL DE L'APPLICATION INTERNE                         -->
+  <!-- ================================================================= -->
+  <div id="app-shell" class="page">
+    <div class="app-layout">
       
-      // Mettre à jour les éléments HTML de la page Profil
-      // (Assure-toi que ces IDs correspondent ou ajoute-les dans ton HTML)
-      const profileName = document.querySelector('#page-profile h2');
-      const profileMeta = document.querySelector('#page-profile p.text-muted');
-      const profileBio = document.querySelector('#page-profile p:not(.text-muted)');
-
-      if(profileName) profileName.textContent = data.nom;
-      if(profileMeta) profileMeta.textContent = `${data.typeArtiste} • ${data.ville}`;
-      if(profileBio && data.bio) profileBio.textContent = data.bio;
-    }
-  } catch (error) {
-    console.error("Erreur lors du chargement du profil:", error);
-  }
-}
-()">
-        Rejoindre KULTUR →
-      </button>
-
-      <div class="auth-switch" style="margin-top:.9rem">
-        Déjà membre ? <a onclick="switchAuthTab('login')">Se connecter</a>
-      </div>
-    </div>
-
-    <!-- LOGIN PANEL -->
-    <div class="auth-panel" id="auth-login">
-      <div class="auth-title">Bon retour !</div>
-      <div class="auth-subtitle">Connecte-toi pour retrouver ta communauté</div>
-
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input class="form-input" id="login-email" type="email" placeholder="jean@email.com">
-        <div class="field-error" id="login-email-err"></div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Mot de passe</label>
-        <input class="form-input" id="login-password" type="password" placeholder="••••••••••">
-        <div class="field-error" id="login-pass-err"></div>
-      </div>
-      <div style="text-align:right;margin-top:-.3rem;margin-bottom:.5rem">
-        <a style="font-size:.78rem;color:var(--k-orange);cursor:pointer">Mot de passe oublié ?</a>
-      </div>
-
-      <button class="btn btn-primary btn-full" id="login-submit-btn" onclick="handleLogin()">
-        Se connecter →
-      </button>
-
-      <div class="auth-switch" style="margin-top:.9rem">
-        Pas encore membre ? <a onclick="switchAuthTab('register')">Créer un compte</a>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- PAGE FEED -->
-<div class="page" id="page-feed">
-  <div class="app-layout">
-    <aside class="sidebar">
-      <div class="sidebar-user">
-        <div class="suser-cover"></div>
-        <div class="suser-av">👤</div>
-        <div class="suser-info">
-          <div class="suser-name" id="feed-username">Créateur</div>
-          <div class="suser-role">🎵 Musicien</div>
-          <div class="suser-stats">
-            <div><div class="sstat-num">142</div><div class="sstat-label">Posts</div></div>
-            <div><div class="sstat-num">2.4K</div><div class="sstat-label">Abonnés</div></div>
-            <div><div class="sstat-num">8.1K</div><div class="sstat-label">Likes</div></div>
+      <!-- NAV SIDEBAR (GAUCHE) -->
+      <aside class="sidebar-left">
+        <div>
+          <div class="sidebar-brand">KULTUR.</div>
+          <ul class="nav-menu">
+            <li class="nav-item" id="nav-feed"><a href="#" onclick="goPage('feed')"><i class="bi bi-house-door-fill"></i> Fil culturel</a></li>
+            <li class="nav-item" id="nav-chat"><a href="#" onclick="goPage('chat')"><i class="bi bi-chat-text-fill"></i> Discussions</a></li>
+            <li class="nav-item" id="nav-profile"><a href="#" onclick="goPage('profile')"><i class="bi bi-person-badge-fill"></i> Mon Profil</a></li>
+          </ul>
+        </div>
+        
+        <div class="sidebar-profile-card">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Avatar">
+          <div class="info">
+            <h4 id="sidebar-user-name">Artiste</h4>
+            <p id="sidebar-user-role">Profil Vérifié</p>
           </div>
-        </div>
-      </div>
-      <div class="sidebar-menu">
-        <div class="smenu-item active"><span class="smenu-icon">🏠</span> Fil d'actualité</div>
-        <div class="smenu-item" onclick="goPage('profil')"><span class="smenu-icon">👤</span> Mon profil</div>
-        <div class="smenu-item" onclick="goPage('messages')"><span class="smenu-icon">💬</span> Messages<span class="smenu-badge">3</span></div>
-        <div class="smenu-item"><span class="smenu-icon">🔔</span> Notifications<span class="smenu-badge">7</span></div>
-        <div class="smenu-item"><span class="smenu-icon">🎭</span> Événements</div>
-        <div class="smenu-item"><span class="smenu-icon">🔍</span> Découverte</div>
-        <div class="smenu-item"><span class="smenu-icon">🛒</span> Marketplace</div>
-        <div class="smenu-item"><span class="smenu-icon">💎</span> Premium<span class="pill pill-or" style="margin-left:auto;font-size:.58rem;padding:.15rem .45rem">NEW</span></div>
-      </div>
-    </aside>
-
-    <main class="feed">
-      <div class="stories-row">
-        <div class="story-item"><div class="story-ring" style="background:var(--k-border2)"><div class="story-inner" style="font-size:1.5rem">➕</div></div><div class="story-name">Ma story</div></div>
-        <div class="story-item"><div class="story-ring"><div class="story-inner" style="background:linear-gradient(135deg,#F4622A,#C92B1A)">🎨</div></div><div class="story-name">Amara</div></div>
-        <div class="story-item"><div class="story-ring"><div class="story-inner" style="background:linear-gradient(135deg,#1DB96A,#0f8f4d)">🎵</div></div><div class="story-name">Kofi</div></div>
-        <div class="story-item"><div class="story-ring"><div class="story-inner" style="background:linear-gradient(135deg,#E8A830,#c4831a)">📸</div></div><div class="story-name">Fatou</div></div>
-        <div class="story-item"><div class="story-ring"><div class="story-inner" style="background:linear-gradient(135deg,#7c3aed,#4c1d95)">📖</div></div><div class="story-name">Ibrahim</div></div>
-        <div class="story-item"><div class="story-ring"><div class="story-inner" style="background:linear-gradient(135deg,#0ea5e9,#0369a1)">🥁</div></div><div class="story-name">Sekou</div></div>
-      </div>
-
-      <div class="composer">
-        <div class="composer-row">
-          <div class="avatar av-md av-orange">👤</div>
-          <input class="composer-field" type="text" placeholder="Partage une création, une pensée, une découverte…">
-        </div>
-        <div class="composer-actions">
-          <button class="composer-btn">🖼️ Photo / Vidéo</button>
-          <button class="composer-btn">🎵 Audio</button>
-          <button class="composer-btn">🎭 Événement</button>
-          <button class="composer-btn">✍️ Article</button>
-        </div>
-      </div>
-
-      <!-- Post 1 -->
-      <div class="post-card">
-        <div class="post-header">
-          <div class="avatar av-md av-orange">🎨<div class="online-dot"></div></div>
-          <div class="post-meta">
-            <div class="post-name">Amara Diallo <span class="verified-icon">✓</span></div>
-            <div class="post-sub">Peintre · Yaoundé, Cameroun · <span>il y a 2h</span></div>
-          </div>
-          <button class="post-menu">···</button>
-        </div>
-        <div class="post-body">Nouvelle toile terminée 🎨 "Terre rouge" — 3 mois de travail pour capturer la lumière du matin à Yaoundé. Les ocres, les ombres, les silhouettes qui s'éveillent.</div>
-        <div class="post-tags"><span class="pill pill-orange">🎨 Peinture</span><span class="pill pill-or">🌅 Paysage</span></div>
-        <div class="post-media"><div class="post-media-img" style="background:linear-gradient(135deg,rgba(122,69,40,.6),rgba(244,98,42,.35),rgba(15,10,6,.85))">🖼️</div></div>
-        <div class="post-footer">
-          <button class="post-action active-like" onclick="toggleLike(this)">❤️ 847</button>
-          <button class="post-action">💬 124</button>
-          <button class="post-action">↗️ Partager</button>
-          <div class="pa-spacer"></div>
-          <button class="post-action">🔖</button>
-        </div>
-      </div>
-
-      <!-- Post 2 -->
-      <div class="post-card">
-        <div class="post-header">
-          <div class="avatar av-md av-vert">🎵</div>
-          <div class="post-meta">
-            <div class="post-name">Kofi Mensah</div>
-            <div class="post-sub">Musicien · Douala · <span>il y a 5h</span></div>
-          </div>
-          <button class="post-menu">···</button>
-        </div>
-        <div class="post-body">Nouveau single <em>"Abena"</em> disponible ! Afrobeat + électro moderne, 4 ans de voyage condensés en 3:42. 🎶🔥</div>
-        <div class="post-tags"><span class="pill pill-vert">🎵 Afrobeat</span><span class="pill pill-orange">🎹 Électro</span></div>
-        <div class="post-media">
-          <div class="post-audio" style="background:var(--k-ink3)">
-            <div class="audio-play">▶</div>
-            <div class="audio-info">
-              <div class="audio-title">Abena — Kofi Mensah feat. Ama Owusu</div>
-              <div class="audio-bar"><div class="audio-progress"></div></div>
-              <div class="audio-time">1:28 / 3:42</div>
-            </div>
-          </div>
-        </div>
-        <div class="post-footer">
-          <button class="post-action" onclick="toggleLike(this)">🤍 1.2K</button>
-          <button class="post-action">💬 89</button>
-          <button class="post-action">↗️ Partager</button>
-          <div class="pa-spacer"></div>
-          <button class="post-action">🔖</button>
-        </div>
-      </div>
-
-      <!-- Post 3 -->
-      <div class="post-card">
-        <div class="post-header">
-          <div class="avatar av-md av-or">📖</div>
-          <div class="post-meta">
-            <div class="post-name">Ibrahim Touré</div>
-            <div class="post-sub">Écrivain · Douala · <span>hier</span></div>
-          </div>
-          <button class="post-menu">···</button>
-        </div>
-        <div class="post-body">Extrait de <em>"Les fils du baobab"</em> :<br><br>Le vieux griot fermait les yeux et la mémoire du village coulait de ses lèvres comme l'eau du Wouri au cœur des pluies…<br><br>Sortie mars 2025. Vos retours m'importent ✍️</div>
-        <div class="post-tags"><span class="pill pill-or">📖 Littérature</span></div>
-        <div class="post-footer">
-          <button class="post-action" onclick="toggleLike(this)">🤍 523</button>
-          <button class="post-action">💬 201</button>
-          <button class="post-action">↗️ Partager</button>
-          <div class="pa-spacer"></div>
-          <button class="post-action">🔖</button>
-        </div>
-      </div>
-    </main>
-
-    <aside class="sidebar-right">
-      <div class="widget">
-        <div class="widget-title">✨ Talents à découvrir</div>
-        <div class="suggest-row"><div class="avatar av-sm av-violet">🎭</div><div class="suggest-info"><div class="suggest-name">Ama Owusu</div><div class="suggest-role">Danseuse · Kumasi</div></div><button class="btn-follow" onclick="toggleFollow(this)">+ Suivre</button></div>
-        <div class="suggest-row"><div class="avatar av-sm av-bleu">🥁</div><div class="suggest-info"><div class="suggest-name">Sekou Camara</div><div class="suggest-role">Percussionniste · Conakry</div></div><button class="btn-follow" onclick="toggleFollow(this)">+ Suivre</button></div>
-        <div class="suggest-row"><div class="avatar av-sm av-or">👗</div><div class="suggest-info"><div class="suggest-name">Ngozi Obi</div><div class="suggest-role">Designer · Lagos</div></div><button class="btn-follow" onclick="toggleFollow(this)">+ Suivre</button></div>
-        <div class="suggest-row"><div class="avatar av-sm av-marron">🎬</div><div class="suggest-info"><div class="suggest-name">Moussa Koné</div><div class="suggest-role">Cinéaste · Bamako</div></div><button class="btn-follow" onclick="toggleFollow(this)">+ Suivre</button></div>
-      </div>
-      <div class="widget">
-        <div class="widget-title">🔥 Tendances KULTUR</div>
-        <div class="trend-row"><div class="trend-num">1</div><div><div class="trend-tag">#AfrobeatCameroun</div><div class="trend-count">3 241 publications</div></div></div>
-        <div class="trend-row"><div class="trend-num">2</div><div><div class="trend-tag">#ArtYaoundé</div><div class="trend-count">1 847 publications</div></div></div>
-        <div class="trend-row"><div class="trend-num">3</div><div><div class="trend-tag">#GriotModerne</div><div class="trend-count">1 203 publications</div></div></div>
-        <div class="trend-row"><div class="trend-num">4</div><div><div class="trend-tag">#ModeAfricaine</div><div class="trend-count">987 publications</div></div></div>
-      </div>
-      <div class="widget" style="background:linear-gradient(135deg,rgba(244,98,42,.12),rgba(201,43,26,.08))">
-        <div class="widget-title" style="color:var(--k-or)">💎 KULTUR Premium</div>
-        <div style="font-size:.82rem;color:rgba(250,244,236,.7);line-height:1.6;margin-bottom:.9rem">Badge vérifié, vente d'œuvres, statistiques avancées, accès Lives exclusifs.</div>
-        <button class="btn btn-primary btn-sm" style="width:100%">Découvrir →</button>
-      </div>
-    </aside>
-  </div>
-</div>
-
-
-<!-- PAGE PROFIL -->
-<div class="page" id="page-profil">
-  <div class="profile-cover"><div class="profile-cover-deco">🎨 🎵 📸 🎭</div></div>
-  <div class="profile-body">
-    <div class="profile-id-row">
-      <div style="display:flex;align-items:flex-end;gap:1.2rem">
-        <div class="profile-av-wrap">
-          <div class="profile-av">🎨<div class="online-dot"></div></div>
-        </div>
-        <div style="padding-top:1rem">
-          <div class="profile-name">Amara Diallo <span style="background:var(--k-orange);border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem">✓</span></div>
-          <div class="profile-handle">@amara.crée · Artiste plasticien · Yaoundé 🇨🇲</div>
-        </div>
-      </div>
-      <div class="profile-btns">
-        <button class="btn btn-ghost btn-md">💬 Message</button>
-        <button class="btn btn-ghost btn-md">🤝 Collaborer</button>
-        <button class="btn btn-primary btn-md">+ Suivre</button>
-      </div>
-    </div>
-    <div class="profile-stats-row">
-      <div><div class="pstat-num">247</div><div class="pstat-label">Publications</div></div>
-      <div><div class="pstat-num">4.8K</div><div class="pstat-label">Abonnés</div></div>
-      <div><div class="pstat-num">1.2K</div><div class="pstat-label">Abonnements</div></div>
-      <div><div class="pstat-num">38</div><div class="pstat-label">Collabs</div></div>
-      <div><div class="pstat-num">22K</div><div class="pstat-label">Likes reçus</div></div>
-    </div>
-    <div class="profile-content">
-      <div>
-        <div class="profile-bio">Peintre autodidacte basé à Yaoundé 🇨🇲. Mon travail explore la mémoire collective africaine à travers les couleurs et les formes — de l'ocre des savanes aux bleus profonds de l'Atlantique.</div>
-        <div class="profile-tags">
-          <span class="pill pill-orange">🎨 Peinture</span>
-          <span class="pill pill-or">🌍 Culture africaine</span>
-          <span class="pill pill-vert">🤝 Open aux collabs</span>
-        </div>
-        <div class="profile-tabs">
-          <button class="ptab active" onclick="activePTab(this)">Publications</button>
-          <button class="ptab" onclick="activePTab(this)">Galerie</button>
-          <button class="ptab" onclick="activePTab(this)">Événements</button>
-          <button class="ptab" onclick="activePTab(this)">À propos</button>
-        </div>
-        <div class="gallery">
-          <div class="gallery-item" style="background:linear-gradient(135deg,#F4622A,#C92B1A,#1A1A2E)">🖼️</div>
-          <div class="gallery-item" style="background:linear-gradient(135deg,#1DB96A,#0f8f4d,#0F0A06)">🎨</div>
-          <div class="gallery-item" style="background:linear-gradient(135deg,#E8A830,#7A4528,#0F0A06)">🏺</div>
-          <div class="gallery-item" style="background:linear-gradient(135deg,#C92B1A,#7A4528,#0F0A06)">🌅</div>
-          <div class="gallery-item" style="background:linear-gradient(135deg,#0F0A06,#F4622A,#7A4528)">🎭</div>
-          <div class="gallery-item" style="background:linear-gradient(135deg,#1DB96A,#E8A830,#0F0A06)">✨</div>
-          <div class="gallery-item" style="background:linear-gradient(135deg,#E8A830,#F4622A,#C92B1A)">🌺</div>
-          <div class="gallery-item" style="background:linear-gradient(135deg,#0F0A06,#1DB96A,#E8A830)">🎋</div>
-          <div class="gallery-item" style="background:linear-gradient(135deg,#7A4528,#C92B1A,#F4622A)">🔥</div>
-        </div>
-      </div>
-      <aside class="profile-side-col">
-        <div class="card" style="padding:1.1rem;margin-bottom:1rem">
-          <div class="widget-title">Infos</div>
-          <div class="info-line"><span class="info-line-icon">📍</span> Yaoundé, Cameroun</div>
-          <div class="info-line"><span class="info-line-icon">🎓</span> École des Beaux-Arts</div>
-          <div class="info-line"><span class="info-line-icon">🗓️</span> Membre depuis jan. 2024</div>
-          <div class="info-line"><span class="info-line-icon">🌐</span> amara-art.cm</div>
-        </div>
-        <div class="card" style="padding:1.1rem">
-          <div class="widget-title">Collaborateurs</div>
-          <div class="suggest-row"><div class="avatar av-sm av-vert">📸</div><div class="suggest-info"><div class="suggest-name">Fatou Ndiaye</div><div class="suggest-role">Photographe</div></div></div>
-          <div class="suggest-row"><div class="avatar av-sm av-or">📖</div><div class="suggest-info"><div class="suggest-name">Ibrahim Touré</div><div class="suggest-role">Écrivain</div></div></div>
+          <button class="btn-logout" id="shell-logout-btn" title="Déconnexion"><i class="bi bi-box-arrow-right"></i></button>
         </div>
       </aside>
+
+      <!-- SECTIONS DYNAMIQUES CENTRALE -->
+      <main style="background-color: var(--color-cream); border-right: 1px solid var(--color-gray-light); overflow-y: auto; height: 100vh;">
+        
+        <!-- SECTION : FEED (FIL D'ACTUALITÉ) -->
+        <div id="subpage-feed" class="main-content" style="display:none;">
+          <div class="view-header">
+            <h2>L'Arène Culturelle</h2>
+            <div style="font-size: 0.95rem; font-weight: 500; color: #666;">Salutations, <span id="nav-user-name" style="color:var(--color-orange); font-weight:700;">...</span></div>
+          </div>
+          
+          <!-- COMPOSER -->
+          <div class="feed-composer">
+            <div class="composer-inputs">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Avatar">
+              <textarea placeholder="Partagez une création, un projet en cours ou une inspiration..."></textarea>
+            </div>
+            <div class="composer-actions">
+              <div class="media-triggers">
+                <button title="Ajouter une image"><i class="bi bi-image"></i></button>
+                <button title="Ajouter un audio / maquette"><i class="bi bi-mic"></i></button>
+              </div>
+              <button class="btn-kultur" style="padding: 0.5rem 1.2rem; font-size: 0.9rem;">Publier</button>
+            </div>
+          </div>
+
+          <!-- FIL DES POSTS (EXEMPLES) -->
+          <div class="kultur-card">
+            <div class="card-header">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="Avatar">
+              <div class="meta">
+                <h4>Malick Bodian</h4>
+                <p>Photographe • Dakar, Sénégal</p>
+              </div>
+            </div>
+            <div class="card-body">
+              <p>Série "Ombres du Sahel" finalisée. Capturer la lumière dorée à 17h reste un exercice mystique. Hâte de vous partager les tirages complets.</p>
+              <div class="card-media-wrap">
+                <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80" alt="Oeuvre">
+              </div>
+              <div class="card-actions">
+                <button class="action-btn"><i class="bi bi-heart"></i> 42</button>
+                <button class="action-btn"><i class="bi bi-chat"></i> 7 commentaires</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION : CHAT (MESSAGERIE) -->
+        <div id="subpage-chat" class="main-content" style="display:none; max-width: 100%; padding: 1.5rem;">
+          <div class="view-header" style="margin-bottom: 1.5rem;">
+            <h2>Ateliers Privés</h2>
+          </div>
+          
+          <div class="chat-wrapper">
+            <div class="chat-threads-sidebar">
+              <div class="thread-item active">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" alt="">
+                <div class="meta">
+                  <h5>Danie K.</h5>
+                  <p>Le script de la série est prêt...</p>
+                </div>
+              </div>
+              <div class="thread-item">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80" alt="">
+                <div class="meta">
+                  <h5>Marc-Aurèle</h5>
+                  <p>Tu as pu tester le micro Alctron ?</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="chat-main-area">
+              <div class="chat-header-bar">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" alt="">
+                <div>
+                  <h4 style="font-size: 1rem; font-weight:600;">Danie K.</h4>
+                  <p style="font-size: 0.8rem; color: green; font-weight: 500;">En studio</p>
+                </div>
+              </div>
+              
+              <div class="chat-body-messages" id="chat-messages-container">
+                <div class="msg-bubble received">Salut ! Tu as jeté un œil aux premières planches de design pour la couverture de la série ?</div>
+                <div class="msg-bubble sent">Yes Danie ! J'aime beaucoup l'orientation ocre et sombre, ça donne un aspect très cinématographique.</div>
+                <div class="msg-bubble received">Super ! On valide cette direction alors. J'envoie la suite cet après-midi.</div>
+              </div>
+              
+              <div class="chat-input-bar">
+                <input type="text" id="chat-input-field" placeholder="Rédiger votre message artistique...">
+                <button class="btn-chat-send" id="chat-send-btn"><i class="bi bi-send-fill"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION : MON PROFIL -->
+        <div id="subpage-profile" class="main-content" style="display:none;">
+          <div class="view-header">
+            <h2>Votre Espace</h2>
+          </div>
+          
+          <div class="profile-hero">
+            <img class="profile-avatar-big" id="profile-display-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" alt="Avatar">
+            <h2 id="profile-display-name">Chargement...</h2>
+            <p class="text-muted" id="profile-display-meta">Spécialité • Ville</p>
+            <p style="max-width: 500px; margin: 0 auto; color: #444;" id="profile-display-bio">Chargement de la description de l'artiste...</p>
+            
+            <div class="profile-stats">
+              <div class="stat-box"><h6>12</h6><p>Créations</p></div>
+              <div class="stat-box"><h6>1.4k</h6><p>Abonnés</p></div>
+              <div class="stat-box"><h6>380</h6><p>Abonnements</p></div>
+            </div>
+          </div>
+
+          <h3 class="section-title">Galerie & Vitrine</h3>
+          <div class="portfolio-grid">
+            <div class="portfolio-item"><img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=400&q=80" alt=""></div>
+            <div class="portfolio-item"><img src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=400&q=80" alt=""></div>
+            <div class="portfolio-item"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=400&q=80" alt=""></div>
+          </div>
+        </div>
+
+      </main>
+
+      <!-- BARRE LATÉRALE DROITE (DECOUVERTES) -->
+      <aside class="sidebar-right">
+        <h3 class="section-title">Créateurs à suivre</h3>
+        <div class="artist-suggestion-list">
+          <div class="artist-row">
+            <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=100&q=80" alt="">
+            <div class="details">
+              <h5>Fanta Diane</h5>
+              <p>Styliste • Bamako</p>
+            </div>
+            <button class="btn-follow-mini">Suivre</button>
+          </div>
+          <div class="artist-row">
+            <img src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=100&q=80" alt="">
+            <div class="details">
+              <h5>Joel Nsam</h5>
+              <p>Beatmaker • Yaoundé</p>
+            </div>
+            <button class="btn-follow-mini">Suivre</button>
+          </div>
+        </div>
+      </aside>
+
     </div>
   </div>
-</div>
 
+  <!-- ================================================================= -->
+  <!-- MODULE SCRIPT LOGIQUE APP & CONFIGURATION FIREBASE                -->
+  <!-- ================================================================= -->
+  <script type="module">
+    // Configuration Firebase d'origine de ton projet kultur2
+    const firebaseConfig = {
+      apiKey: "AIzaSyDE2X9p_Y_H8G-k9uVqD1-7Y-f7A7oGoc",
+      authDomain: "kultur2-e6dbc.firebaseapp.com",
+      projectId: "kultur2-e6dbc",
+      storageBucket: "kultur2-e6dbc.appspot.com",
+      messagingSenderId: "542361819389",
+      appId: "1:542361819389:web:96e8dceca694008fe5db8e"
+    };
 
-<!-- PAGE MESSAGES -->
-<div class="page" id="page-messages">
-  <div class="chat-layout">
-    <div class="conv-panel">
-      <div class="conv-header">
-        <div class="conv-header-title">Messages</div>
-        <button class="icon-btn">✏️</button>
-      </div>
-      <div class="conv-search"><input type="text" placeholder="🔍  Rechercher…"></div>
-      <div class="conv-list">
-        <div class="conv-item active">
-          <div class="avatar av-md av-vert" style="position:relative">📸<div class="online-dot"></div></div>
-          <div class="conv-info"><div class="conv-top"><div class="conv-name">Fatou Ndiaye</div><div class="conv-time">14:23</div></div><div class="conv-last">Super, je t'envoie les fichiers 🎨</div></div>
-          <span class="conv-unread">2</span>
-        </div>
-        <div class="conv-item">
-          <div class="avatar av-md av-vert" style="position:relative">🎵<div class="online-dot"></div></div>
-          <div class="conv-info"><div class="conv-top"><div class="conv-name">Kofi Mensah</div><div class="conv-time">11:05</div></div><div class="conv-last">Tu viens au concert vendredi ?</div></div>
-          <span class="conv-unread">1</span>
-        </div>
-        <div class="conv-item">
-          <div class="avatar av-md av-or">📖</div>
-          <div class="conv-info"><div class="conv-top"><div class="conv-name">Ibrahim Touré</div><div class="conv-time">Hier</div></div><div class="conv-last">Merci pour ton retour</div></div>
-        </div>
-        <div class="conv-item">
-          <div class="avatar av-md av-orange">🎭</div>
-          <div class="conv-info"><div class="conv-top"><div class="conv-name">🔥 Artistes Douala</div><div class="conv-time">Lun.</div></div><div class="conv-last">Ama: L'expo est confirmée !</div></div>
-        </div>
-      </div>
-    </div>
-    <div class="chat-window">
-      <div class="chat-topbar">
-        <div class="avatar av-md av-vert">📸<div class="online-dot"></div></div>
-        <div class="chat-topbar-info"><div class="chat-topbar-name">Fatou Ndiaye</div><div class="chat-topbar-status">● En ligne maintenant</div></div>
-        <div class="chat-topbar-actions">
-          <button class="icon-btn">📞</button>
-          <button class="icon-btn">📹</button>
-          <button class="icon-btn">⋯</button>
-        </div>
-      </div>
-      <div class="chat-msgs" id="chatMsgs">
-        <div class="msg-day-label">Aujourd'hui</div>
-        <div class="msg-row">
-          <div class="msg-av-sm" style="background:linear-gradient(135deg,#1DB96A,#0f8f4d);border-radius:50%;display:flex;align-items:center;justify-content:center">📸</div>
-          <div><div class="msg-bubble">Amara ! Tes dernières peintures sont absolument magnifiques 🎨</div><div class="msg-time">14:15</div></div>
-        </div>
-        <div class="msg-row own">
-          <div class="msg-av-sm" style="background:linear-gradient(135deg,#F4622A,#C92B1A);border-radius:50%;display:flex;align-items:center;justify-content:center">👤</div>
-          <div><div class="msg-bubble">Merci Fatou ! 🙏 On pourrait faire quelque chose ensemble ? Tes photos + mes tableaux, une expo commune ?</div><div class="msg-time">14:17</div></div>
-        </div>
-        <div class="msg-row">
-          <div class="msg-av-sm" style="background:linear-gradient(135deg,#1DB96A,#0f8f4d);border-radius:50%;display:flex;align-items:center;justify-content:center">📸</div>
-          <div><div class="msg-bubble">Oh oui !! J'adorerais ça 🤩 J'ai des clichés du marché qui résonneraient parfaitement avec ta série "Terres"…</div><div class="msg-time">14:19</div></div>
-        </div>
-        <div class="msg-row own">
-          <div class="msg-av-sm" style="background:linear-gradient(135deg,#F4622A,#C92B1A);border-radius:50%;display:flex;align-items:center;justify-content:center">👤</div>
-          <div><div class="msg-bubble">Exactement ! Tu peux m'envoyer quelques exemples ?</div><div class="msg-time">14:21</div></div>
-        </div>
-        <div class="msg-row">
-          <div class="msg-av-sm" style="background:linear-gradient(135deg,#1DB96A,#0f8f4d);border-radius:50%;display:flex;align-items:center;justify-content:center">📸</div>
-          <div><div class="msg-bubble">Super, je t'envoie les fichiers bruts 🎨</div><div class="msg-time">14:23</div></div>
-        </div>
-      </div>
-      <div class="chat-input-bar">
-        <div class="chat-attach"><button class="icon-btn">📎</button><button class="icon-btn">😊</button></div>
-        <input class="chat-field" id="chatField" type="text" placeholder="Écris un message…">
-        <button class="chat-send-btn" id="chatSend">➤</button>
-      </div>
-    </div>
-  </div>
-</div>
+    // Global App States
+    let currentPage = 'login';
+    let currentUser = null;
 
-
-<!-- SCRIPTS -->
-<script>
-/* ── Navigation ── */
-function navClick(e, el) {
-  e.preventDefault();
-  const page = el.dataset.page;
-  goPage(page, el);
-}
-
-function goPage(name, linkEl) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const target = document.getElementById('page-' + name);
-  if (target) target.classList.add('active');
-  if (linkEl) {
-    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-    linkEl.classList.add('active');
-  } else {
-    // auto-highlight
-    document.querySelectorAll('.nav-links a').forEach(a => {
-      a.classList.toggle('active', a.dataset.page === name);
-    });
-  }
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-/* ── Auth tabs ── */
-function switchAuthTab(panel) {
-  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('tab-' + panel).classList.add('active');
-  document.getElementById('auth-' + panel).classList.add('active');
-}
-
-/* ── Toast ── */
-function showToast(msg, type = 'info') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast ' + type;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3500);
-}
-
-/* ── Likes / Follow ── */
-function toggleLike(btn) {
-  const isLiked = btn.classList.contains('active-like');
-  const text = btn.textContent.trim();
-  const match = text.match(/[\d.,K]+/);
-  if (!match) return;
-  let num = match[0];
-  let val = num.includes('K') ? parseFloat(num) * 1000 : parseInt(num.replace(',', ''));
-  val = isLiked ? val - 1 : val + 1;
-  const display = val >= 1000 ? (val / 1000).toFixed(1) + 'K' : val;
-  btn.textContent = (isLiked ? '🤍' : '❤️') + ' ' + display;
-  btn.classList.toggle('active-like');
-}
-
-function toggleFollow(btn) {
-  const f = btn.classList.contains('following');
-  btn.textContent = f ? '+ Suivre' : '✓ Suivi';
-  btn.classList.toggle('following');
-}
-
-function activePTab(btn) {
-  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-/* ── Chat ── */
-function sendMsg() {
-  const field = document.getElementById('chatField');
-  const msgs = document.getElementById('chatMsgs');
-  const val = field.value.trim();
-  if (!val) return;
-  const now = new Date();
-  const time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
-  const row = document.createElement('div');
-  row.className = 'msg-row own';
-  row.innerHTML = `
-    <div class="msg-av-sm" style="background:linear-gradient(135deg,#F4622A,#C92B1A);border-radius:50%;display:flex;align-items:center;justify-content:center">👤</div>
-    <div><div class="msg-bubble">${val}</div><div class="msg-time">${time}</div></div>`;
-  msgs.appendChild(row);
-  field.value = '';
-  msgs.scrollTop = msgs.scrollHeight;
-}
-document.getElementById('chatSend').addEventListener('click', sendMsg);
-document.getElementById('chatField').addEventListener('keypress', e => { if (e.key === 'Enter') sendMsg(); });
-
-/* ── UI auth state helpers ── */
-function setLoggedIn(user) {
-  const email = user.email || '';
-  const displayName = user.displayName || email.split('@')[0];
-
-  // Show/hide nav items
-  document.getElementById('nav-user-info').style.display = 'flex';
-  document.getElementById('nav-user-email').textContent = displayName;
-  document.getElementById('nav-join-btn').style.display = 'none';
-  document.getElementById('nav-logout-btn').style.display = 'flex';
-  document.getElementById('btn-notif').style.display = 'flex';
-  document.getElementById('btn-msg-nav').style.display = 'flex';
-  document.getElementById('nav-feed-li').style.display = 'list-item';
-  document.getElementById('nav-profil-li').style.display = 'list-item';
-  document.getElementById('nav-messages-li').style.display = 'list-item';
-
-  // Update feed sidebar name
-  document.getElementById('feed-username').textContent = displayName;
-}
-
-function setLoggedOut() {
-  document.getElementById('nav-user-info').style.display = 'none';
-  document.getElementById('nav-join-btn').style.display = 'flex';
-  document.getElementById('nav-logout-btn').style.display = 'none';
-  document.getElementById('btn-notif').style.display = 'none';
-  document.getElementById('btn-msg-nav').style.display = 'none';
-  document.getElementById('nav-feed-li').style.display = 'none';
-  document.getElementById('nav-profil-li').style.display = 'none';
-  document.getElementById('nav-messages-li').style.display = 'none';
-}
-
-function setBtnLoading(btnId, loading) {
-  const btn = document.getElementById(btnId);
-  if (loading) {
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>';
-  } else {
-    btn.disabled = false;
-  }
-}
-
-/* ── Firebase error messages in French ── */
-function firebaseErrFr(code) {
-  const msgs = {
-    'auth/email-already-in-use': 'Cet email est déjà utilisé.',
-    'auth/invalid-email': 'Email invalide.',
-    'auth/weak-password': 'Mot de passe trop faible (min. 6 caractères).',
-    'auth/user-not-found': 'Aucun compte trouvé avec cet email.',
-    'auth/wrong-password': 'Mot de passe incorrect.',
-    'auth/invalid-credential': 'Email ou mot de passe incorrect.',
-    'auth/too-many-requests': 'Trop de tentatives. Réessaie plus tard.',
-    'auth/network-request-failed': 'Erreur réseau. Vérifie ta connexion.',
-  };
-  return msgs[code] || 'Une erreur est survenue. Réessaie.';
-}
-
-/* ── Register ── */
-function handleRegister() {
-  const email = document.getElementById('reg-email').value.trim();
-  const password = document.getElementById('reg-password').value;
-
-  // Clear errors
-  document.getElementById('reg-email-err').style.display = 'none';
-  document.getElementById('reg-pass-err').style.display = 'none';
-
-  if (!email) {
-    document.getElementById('reg-email-err').textContent = 'Veuillez saisir un email.';
-    document.getElementById('reg-email-err').style.display = 'block';
-    return;
-  }
-  if (password.length < 6) {
-    document.getElementById('reg-pass-err').textContent = 'Minimum 6 caractères.';
-    document.getElementById('reg-pass-err').style.display = 'block';
-    return;
-  }
-
-  setBtnLoading('reg-submit-btn', true);
-
-  import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(({ initializeApp, getApps }) => {
-    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js').then(({ getAuth, createUserWithEmailAndPassword, updateProfile }) => {
-      let app;
-      if (getApps().length === 0) {
-        app = initializeApp(firebaseConfig);
-      } else {
-        app = getApps()[0];
-      }
+    // Initialisation dynamique de l'Authentification au démarrage
+    async function initAuth() {
+      const { initializeApp } = await import("https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js");
+      const { getAuth } = await import("https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js");
+      
+      const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
-      const prenom = document.getElementById('reg-prenom').value.trim();
-      const nom = document.getElementById('reg-nom').value.trim();
-      const displayName = [prenom, nom].filter(Boolean).join(' ') || email.split('@')[0];
 
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(cred => updateProfile(cred.user, { displayName }))
-        .then(() => {
-          setBtnLoading('reg-submit-btn', false);
-          document.getElementById('reg-submit-btn').textContent = 'Rejoindre KULTUR →';
-          showToast('🎉 Bienvenue sur KULTUR !', 'success');
-          goPage('feed');
-        })
-        .catch(err => {
-          setBtnLoading('reg-submit-btn', false);
-          document.getElementById('reg-submit-btn').textContent = 'Rejoindre KULTUR →';
-          const msg = firebaseErrFr(err.code);
-          if (err.code === 'auth/email-already-in-use' || err.code === 'auth/invalid-email') {
-            document.getElementById('reg-email-err').textContent = msg;
-            document.getElementById('reg-email-err').style.display = 'block';
-          } else {
-            showToast('⚠️ ' + msg, 'error');
+      // Écouteur de changement d'état (Authentification)
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          currentUser = user;
+          document.getElementById('nav-user-name').innerText = user.displayName || "Artiste";
+          document.getElementById('sidebar-user-name').innerText = user.displayName || "Artiste";
+          
+          // CHARGEMENT DYNAMIQUE DU PROFIL DEPUIS FIRESTORE
+          loadUserProfile(user.uid);
+          
+          if (currentPage === 'login' || currentPage === 'register') {
+            goPage('feed');
           }
-        });
-    });
-  });
-}
+        } else {
+          currentUser = null;
+          goPage('login');
+        }
+      });
+    }
 
-/* ── Login ── */
-function handleLogin() {
-  const email = document.getElementById('login-email').value.trim();
-  const password = document.getElementById('login-password').value;
+    // GESTION DU SYSTÈME DE NAVIGATION (SPA MAP)
+    window.goPage = function(pageId) {
+      // Nettoyage global des classes actives
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      
+      currentPage = pageId;
 
-  document.getElementById('login-email-err').style.display = 'none';
-  document.getElementById('login-pass-err').style.display = 'none';
-
-  if (!email) {
-    document.getElementById('login-email-err').textContent = 'Veuillez saisir un email.';
-    document.getElementById('login-email-err').style.display = 'block';
-    return;
-  }
-  if (!password) {
-    document.getElementById('login-pass-err').textContent = 'Veuillez saisir un mot de passe.';
-    document.getElementById('login-pass-err').style.display = 'block';
-    return;
-  }
-
-  setBtnLoading('login-submit-btn', true);
-
-  import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(({ initializeApp, getApps }) => {
-    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js').then(({ getAuth, signInWithEmailAndPassword }) => {
-      let app;
-      if (getApps().length === 0) {
-        app = initializeApp(firebaseConfig);
+      if (pageId === 'login') {
+        document.getElementById('page-login').classList.add('active');
+      } else if (pageId === 'register') {
+        document.getElementById('page-register').classList.add('active');
       } else {
-        app = getApps()[0];
+        // Mode interne application connecté (Shell)
+        document.getElementById('app-shell').classList.add('active');
+        
+        // Sous-pages internes
+        document.getElementById('subpage-feed').style.display = 'none';
+        document.getElementById('subpage-chat').style.display = 'none';
+        document.getElementById('subpage-profile').style.display = 'none';
+
+        if (pageId === 'feed') {
+          document.getElementById('subpage-feed').style.display = 'block';
+          document.getElementById('nav-feed').classList.add('active');
+        } else if (pageId === 'chat') {
+          document.getElementById('subpage-chat').style.display = 'block';
+          document.getElementById('nav-chat').classList.add('active');
+          document.getElementById('chat-input-field').focus();
+        } else if (pageId === 'profile') {
+          document.getElementById('subpage-profile').style.display = 'block';
+          document.getElementById('nav-profile').classList.add('active');
+          if (currentUser) loadUserProfile(currentUser.uid); // Rafraîchissement au clic
+        }
       }
-      const auth = getAuth(app);
+    };
 
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          setBtnLoading('login-submit-btn', false);
-          document.getElementById('login-submit-btn').textContent = 'Se connecter →';
-          showToast('✅ Connexion réussie !', 'success');
-          goPage('feed');
-        })
-        .catch(err => {
-          setBtnLoading('login-submit-btn', false);
-          document.getElementById('login-submit-btn').textContent = 'Se connecter →';
-          const msg = firebaseErrFr(err.code);
-          if (err.code.includes('password') || err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
-            document.getElementById('login-pass-err').textContent = msg;
-            document.getElementById('login-pass-err').style.display = 'block';
-          } else {
-            document.getElementById('login-email-err').textContent = msg;
-            document.getElementById('login-email-err').style.display = 'block';
-          }
+    // ACTION : CONNEXION (LOGIN)
+    async function handleLogin(e) {
+      e.preventDefault();
+      const btn = document.getElementById('login-btn');
+      const originalText = btn.innerText;
+      btn.innerText = "Vérification...";
+      btn.disabled = true;
+
+      const email = document.getElementById('login-email').value.trim();
+      const pass = document.getElementById('login-pass').value;
+
+      try {
+        const { getAuth, signInWithEmailAndPassword } = await import("https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js");
+        const auth = getAuth();
+        await signInWithEmailAndPassword(auth, email, pass);
+      } catch (error) {
+        console.error(error);
+        let msg = "Erreur de connexion. Vérifiez vos identifiants.";
+        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+          msg = "Email ou mot de passe incorrect.";
+        }
+        alert(msg);
+      } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
+      }
+    }
+
+    // ACTION : INSCRIPTION AVANCÉE (REGISTER + FIRESTORE COMPLÈTE)
+    async function handleRegister(e) {
+      e.preventDefault();
+      const btn = document.getElementById('reg-btn');
+      const originalText = btn.innerText;
+      btn.innerText = "Création du compte d'artiste...";
+      btn.disabled = true;
+
+      const name = document.getElementById('reg-name').value.trim();
+      const typeArtiste = document.getElementById('reg-type').value;
+      const ville = document.getElementById('reg-ville').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const pass = document.getElementById('reg-pass').value;
+
+      if (!name || !typeArtiste || !ville || !email || !pass) {
+        alert("Veuillez remplir correctement l'ensemble des champs.");
+        btn.innerText = originalText;
+        btn.disabled = false;
+        return;
+      }
+
+      try {
+        const { getAuth, createUserWithEmailAndPassword, updateProfile } = await import("https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js");
+        const { getFirestore, doc, setDoc } = await import("https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js");
+        
+        const auth = getAuth();
+        const db = getFirestore();
+
+        // 1. Création du compte d'authentification
+        const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+        const user = userCredential.user;
+
+        // 2. Attribution du nom d'affichage de base
+        await updateProfile(user, { displayName: name });
+
+        // 3. Enregistrement des métadonnées personnalisées dans Firestore
+        await setDoc(doc(db, "users", user.uid), {
+          uid: user.uid,
+          nom: name,
+          email: email,
+          typeArtiste: typeArtiste,
+          ville: ville,
+          bio: "Artiste passionné, membre actif de la communauté créative KULTUR.",
+          avatarURL: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+          createdAt: new Date()
         });
-    });
-  });
-}
 
-/* ── Logout ── */
-function handleLogout() {
-  import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js').then(({ getApps }) => {
-    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js').then(({ getAuth, signOut }) => {
-      const app = getApps()[0];
-      if (!app) return;
-      const auth = getAuth(app);
-      signOut(auth).then(() => {
-        setLoggedOut();
-        showToast('👋 À bientôt !', 'info');
-        goPage('accueil');
+        alert("Bienvenue au sein du mouvement KULTUR !");
+        goPage('feed');
+
+      } catch (error) {
+        console.error(error);
+        let msg = "Une erreur est survenue lors de l'inscription.";
+        if (error.code === 'auth/email-already-in-use') msg = "Cette adresse e-mail est déjà enregistrée.";
+        if (error.code === 'auth/weak-password') msg = "Votre mot de passe doit comporter au moins 6 caractères.";
+        alert(msg);
+      } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
+      }
+    }
+
+    // LOGIQUE DE CHARGEMENT DYNAMIQUE DU PROFIL DEPUIS FIRESTORE
+    async function loadUserProfile(uid) {
+      try {
+        const { getFirestore, doc, getDoc } = await import("https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js");
+        const db = getFirestore();
+        
+        const docRef = doc(db, "users", uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          
+          // Mise à jour des zones textuelles du profil
+          const profileName = document.getElementById('profile-display-name');
+          const profileMeta = document.getElementById('profile-display-meta');
+          const profileBio = document.getElementById('profile-display-bio');
+          
+          if (profileName) profileName.textContent = userData.nom;
+          if (profileMeta) profileMeta.textContent = `${userData.typeArtiste} • ${userData.ville}`;
+          if (profileBio) profileBio.textContent = userData.bio;
+        }
+      } catch (error) {
+        console.error("Impossible de récupérer les détails Firestore de l'utilisateur :", error);
+      }
+    }
+
+    // ACTION : DECONNEXION
+    async function handleLogout() {
+      if (confirm("Souhaitez-vous vous déconnecter de votre espace KULTUR ?")) {
+        const { getAuth, signOut } = await import("https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js");
+        const auth = getAuth();
+        await signOut(auth);
+      }
+    }
+
+    // INTERFACE DE DISCUSSION LOCALISEE (MESSAGES SIMULES)
+    function sendMsg() {
+      const field = document.getElementById('chat-input-field');
+      const val = field.value.trim();
+      if (!val) return;
+
+      const container = document.getElementById('chat-messages-container');
+      const bubble = document.createElement('div');
+      bubble.className = "msg-bubble sent";
+      bubble.textContent = val; // Utilisation sécurisée de textContent contre le XSS
+
+      container.appendChild(bubble);
+      field.value = "";
+      field.focus();
+      container.scrollTop = container.scrollHeight;
+    }
+
+    // INITIALISATION DES ECOUTEURS D'EVENEMENTS (DOM ATTACHMENTS)
+    document.addEventListener("DOMContentLoaded", () => {
+      initAuth();
+
+      document.getElementById('login-form').addEventListener('submit', handleLogin);
+      document.getElementById('register-form').addEventListener('submit', handleRegister);
+      document.getElementById('shell-logout-btn').addEventListener('click', handleLogout);
+      
+      // Actions messagerie
+      document.getElementById('chat-send-btn').addEventListener('click', sendMsg);
+      document.getElementById('chat-input-field').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') sendMsg();
       });
     });
-  });
-}
-
-/* ── Firebase config & auth state ── */
-const firebaseConfig = {
-  apiKey: "AIzaSyAwvZTzSOV7Z4_A-ZFnURiDkRFMKpObTEo",
-  authDomain: "kultur2-e6dbc.firebaseapp.com",
-  projectId: "kultur2-e6dbc",
-  storageBucket: "kultur2-e6dbc.firebasestorage.app",
-  messagingSenderId: "801781384858",
-  appId: "1:801781384858:web:a76d6b4bf72d4c88f18123"
-};
-
-// Init Firebase and watch auth state on load
-(async () => {
-  try {
-    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
-    const { getAuth, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
-    const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-    const auth = getAuth(app);
-    onAuthStateChanged(auth, user => {
-      if (user) {
-        setLoggedIn(user);
-      } else {
-        setLoggedOut();
-      }
-    });
-  } catch (e) {
-    console.warn('Firebase init error:', e);
-  }
-})();
-</script>
-
+  </script>
 </body>
 </html>
